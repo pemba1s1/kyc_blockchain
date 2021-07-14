@@ -32,7 +32,9 @@ contract Kyc {
 
   mapping(uint => Customer) customers;
   mapping(address => Organization) organizations;
-  mapping(uint => kycRequest) kycrequests;
+//   mapping(address => kycRequest[]) kycrequestsbyaddress;
+
+  kycRequest[] kycrequests;
 
 // Checks whether the requestor is admin
   modifier isAdmin {
@@ -53,14 +55,16 @@ contract Kyc {
   
 
 
-  function addOrg(string memory _name,address _ethAddress) public isAdmin returns(bool) {
+  function addOrg(string memory _name,address _ethAddress) public isAdmin returns(string memory) {
       require(organizations[_ethAddress].ethAddress!=_ethAddress,"Org already added");
       organizations[_ethAddress]=Organization(_name,_ethAddress);
+      return ("OK");
   }
   
   function removeOrg(address _ethAddress) public isAdmin returns(bool) {
       require(organizations[_ethAddress].ethAddress==_ethAddress,"Org doesnt exist");
       delete organizations[_ethAddress];
+      return true;
   }
   
   function viewOrg(address _ethAddress)public isAdmin view returns(string memory){
@@ -74,7 +78,8 @@ contract Kyc {
       customers[_uname].location=_location;
       customers[_uname].kycStatus=_kycStatus;
       requestKYC(_uname);
-      giveAccessKYC(reqno,_uname,msg.sender,true);
+      giveAccessKYC(reqno-1,_uname,msg.sender,true);
+      return true;
   }
   
   function viewKYC(uint _reqid,uint _uname) public view returns(uint,string memory,string memory,bool,address[] memory,uint){
@@ -87,14 +92,17 @@ contract Kyc {
       customers[_uname].name=_name;
       customers[_uname].location=_location;
       customers[_uname].kycStatus=_kycStatus;
+      return true;
   }
   
   
   
-  function requestKYC(uint _uname) public isOrgValid{
+  function requestKYC(uint _uname) public isOrgValid returns(bool){
       require(customers[_uname].uname==_uname,"Customer doesnt exists");
+      kycrequests.push(kycRequest(reqno,msg.sender,_uname,false));
+    //   kycrequestsbyaddress[msg.sender]=kycRequest(reqno,msg.sender,_uname,false);
       reqno++;
-      kycrequests[reqno] = kycRequest(reqno,msg.sender,_uname,false);
+      return true;
   }
   
   function deleteRequest(uint _reqid) public isOrgValid{
@@ -103,18 +111,22 @@ contract Kyc {
       delete kycrequests[_reqid];
   }
 
-  function listRequest() public isOrgValid view returns(kycRequest[] memory,uint){
-      kycRequest[] memory ret =  new kycRequest[](reqno);
-      uint j = 0;
-        for (uint i = 1; i <= reqno; i++) {
-            if(kycrequests[i].ethAddress==msg.sender){
-                ret[j] = kycrequests[i];
-                j++;
-            }
-                
-        }
-    return (ret,ret.length);
+  function viewRequest(uint _reqid) public isOrgValid view returns(uint, address, uint, bool){
+      require(kycrequests[_reqid].ethAddress==msg.sender,"You are not authorized");
+      return(kycrequests[_reqid].reqid,kycrequests[_reqid].ethAddress,kycrequests[_reqid].uname,kycrequests[_reqid].isAllowed);
   }
+//   function listRequest() public isOrgValid view returns(kycRequest[] memory,uint){
+//       kycRequest[] memory ret =  new kycRequest[](reqno);
+//       uint j = 0;
+//         for (uint i = 1; i <= reqno; i++) {
+//             if(kycrequestsbyaddress[i].ethAddress==msg.sender){
+//                 ret[j] = kycrequests[i];
+//                 j++;
+//             }
+                
+//         }
+//     return (ret,ret.length);
+//   }
 
   function giveAccessKYC(uint _reqid,uint _uname,address _ethAddress,bool _isAllowed) public returns(bool){
       require(kycrequests[_reqid].reqid==_reqid,"Requests not found");

@@ -62,7 +62,22 @@ contract Kyc {
       _;
   }
   
-
+//   function findOrg(uint _uname,address ethAddress) internal view returns(bool){
+//       uint i = 0;
+//           for(i;i<customers[_uname].organization.length;i++){
+//               if(customers[_uname].organization[i]==ethAddress){
+//                   return true;
+//               }
+//           }
+//   }
+  function findOrgIndex(uint _uname,address ethAddress) internal view returns(uint){
+      uint i = 0;
+          for(i;i<customers[_uname].organization.length;i++){
+              if(customers[_uname].organization[i]==ethAddress){
+                  return i;
+              }
+          }
+  }
 
   function addOrg(string memory _name,address _ethAddress) public isAdmin returns(string memory) {
       require(organizations[_ethAddress].ethAddress!=_ethAddress,"Org already added");
@@ -108,7 +123,14 @@ contract Kyc {
       return true;
   }
   
-  
+  function removeKYC(uint _uname,uint _reqid) public isOrgValid returns (bool){
+      require(customers[_uname].uname==_uname,"User doesn't exist");
+      require(kycrequests[_reqid].isAllowed,"You dont have access to this user");
+      uint i=findOrgIndex(_uname,msg.sender);
+      customers[_uname].organization[i]=customers[_uname].organization[customers[_uname].organization.length-1];
+      customers[_uname].organization.pop();
+      deleteRequest(_reqid);
+  }
   
   function requestKYC(uint _uname) public isOrgValid returns(bool){
       require(customers[_uname].uname==_uname,"Customer doesnt exists");

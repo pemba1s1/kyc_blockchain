@@ -24,7 +24,6 @@ contract('KYC',accounts=>{
             await kyc.registerKYC(1,'Pemba','Kapan',true,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             const name = await kyc.viewKYC(0,1,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             const val = await kyc.viewRequest(0,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'});
-            console.log(name)
             assert.equal(val[3],true)
             assert.equal(val[1],'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
             assert.equal(name[1],'Pemba')
@@ -40,12 +39,18 @@ contract('KYC',accounts=>{
         })
     })
 
-    describe("deleteRequest() & giveAccessKYC()",async()=>{
-        it("Request deleted & access revoked",async()=>{
+    describe("giveAccessKYC()",async()=>{
+        it("access revoked",async()=>{
             await kyc.giveAccessKYC(0,1,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',false,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             const val = await kyc.viewRequest(0,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'});
             assert.equal(val[3],false)
-            await kyc.deleteRequest(0,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+        })
+    })
+
+    describe("removeKYC() and deleteRequest()",async()=>{
+        it("kyc removed and request deleted",async()=>{
+            await kyc.giveAccessKYC(0,1,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',true,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+            await kyc.removeKYC(1,0,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
         })
     })
 

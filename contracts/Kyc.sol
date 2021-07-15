@@ -36,6 +36,15 @@ contract Kyc {
 
   kycRequest[] kycrequests;
 
+  event orgAdded(string name,address ethAddress);
+  event orgRemoved(address ethAddress);
+  event customerAdded(uint uname,string name,string location,bool kycStatus);
+  event customerUpdated(uint uname,string name,string location,bool kycStatus);
+  event requestAdded(uint reqid,address ethAddress, uint uname,bool isAllowed);
+  event requestRemoved(uint reqid,address ethAddress);
+  event accessGiven(uint reqid,uint uname,address ethAddress,bool isAllowed);
+  event accessRevoked(uint reqid,uint uname,address ethAddress,bool isAllowed);
+
 // Checks whether the requestor is admin
   modifier isAdmin {
       require(
@@ -58,12 +67,14 @@ contract Kyc {
   function addOrg(string memory _name,address _ethAddress) public isAdmin returns(string memory) {
       require(organizations[_ethAddress].ethAddress!=_ethAddress,"Org already added");
       organizations[_ethAddress]=Organization(_name,_ethAddress);
+      emit orgAdded(_name,_ethAddress);
       return ("OK");
   }
   
   function removeOrg(address _ethAddress) public isAdmin returns(bool) {
       require(organizations[_ethAddress].ethAddress==_ethAddress,"Org doesnt exist");
       delete organizations[_ethAddress];
+      emit orgRemoved(_ethAddress);
       return true;
   }
   
@@ -79,6 +90,7 @@ contract Kyc {
       customers[_uname].kycStatus=_kycStatus;
       requestKYC(_uname);
       giveAccessKYC(reqno-1,_uname,msg.sender,true);
+      emit customerAdded(_uname,_name,_location,_kycStatus);
       return true;
   }
   
@@ -92,6 +104,7 @@ contract Kyc {
       customers[_uname].name=_name;
       customers[_uname].location=_location;
       customers[_uname].kycStatus=_kycStatus;
+      emit customerUpdated(_uname,_name,_location,_kycStatus);
       return true;
   }
   
@@ -101,6 +114,7 @@ contract Kyc {
       require(customers[_uname].uname==_uname,"Customer doesnt exists");
       kycrequests.push(kycRequest(reqno,msg.sender,_uname,false));
     //   kycrequestsbyaddress[msg.sender]=kycRequest(reqno,msg.sender,_uname,false);
+      emit requestAdded(reqno,msg.sender,_uname,false);
       reqno++;
       return true;
   }
@@ -109,6 +123,7 @@ contract Kyc {
       require(kycrequests[_reqid].reqid==_reqid,"Request doesnt exist");
       require(kycrequests[_reqid].ethAddress==msg.sender,"You cannot remove request of other organization");
       delete kycrequests[_reqid];
+      emit requestRemoved(_reqid,msg.sender);
   }
 
   function viewRequest(uint _reqid) public isOrgValid view returns(uint, address, uint, bool){
@@ -143,6 +158,7 @@ contract Kyc {
           if(exist == false){
               customers[_uname].organization.push(_ethAddress);
           }
+          emit accessGiven(_reqid,_uname,_ethAddress,_isAllowed);
       }else{
           uint i = 0;
           for(i;i<customers[_uname].organization.length;i++){
@@ -152,6 +168,7 @@ contract Kyc {
                   customers[_uname].organization.pop();
               }
           }
+          emit accessRevoked(_reqid,_uname,_ethAddress,_isAllowed);
       }
       
   }

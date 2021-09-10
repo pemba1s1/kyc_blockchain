@@ -19,13 +19,10 @@ contract('KYC',accounts=>{
         })
     })
 
-    describe("registerKYC() , giveAccessKYC(), viewRequest() , requestKYC() & viewKYC()",async() => {
-        it('KYC added, request added, KYC access given, KYC viewed, Request viewed',async()=>{
+    describe("registerKYC() , giveAccessKYC(), viewRequest() , requestKYC(),deleteRequest() & viewKYC()",async() => {
+        it('KYC added, request added, KYC access given, KYC viewed, Request viewed,Request Deleted',async()=>{
             await kyc.registerKYC(1,'Pemba','Kapan',true,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
-            const name = await kyc.viewKYC(0,1,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
-            const val = await kyc.viewRequest(0,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'});
-            assert.equal(val[3],true)
-            assert.equal(val[1],'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
+            const name = await kyc.viewKYC(1,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             assert.equal(name[1],'Pemba')
             assert.equal(name[4][0],'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
         })
@@ -34,23 +31,14 @@ contract('KYC',accounts=>{
     describe("updateKYC() & viewKYC()",async() => {
         it("KYC updated",async()=>{
             await kyc.updateKYC(1,'Updated','Kapan',true,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
-            const name = await kyc.viewKYC(0,1,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+            const name = await kyc.viewKYC(1,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             assert.equal(name[1],'Updated')
         })
     })
 
-    describe("giveAccessKYC()",async()=>{
-        it("access revoked",async()=>{
-            await kyc.giveAccessKYC(0,1,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',false,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
-            const val = await kyc.viewRequest(0,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'});
-            assert.equal(val[3],false)
-        })
-    })
-
-    describe("removeKYC() and deleteRequest()",async()=>{
-        it("kyc removed and request deleted",async()=>{
-            await kyc.giveAccessKYC(0,1,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',true,{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
-            await kyc.removeKYC(1,0,{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+    describe("revokeAccess()",async()=>{
+        it("kyc removed and access revoked",async()=>{
+            await kyc.revokeAccessKYC(1,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
         })
     })
 

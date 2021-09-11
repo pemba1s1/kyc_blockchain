@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import Kyc from "../contracts/Kyc.json";
+import Kyc from "../../contracts/Kyc.json";
 import Web3 from 'web3'
 import NavBar from './NavBar'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-class App extends Component {
+class Org extends Component {
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
@@ -56,4 +56,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Org;

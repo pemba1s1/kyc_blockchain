@@ -117,6 +117,15 @@ contract Kyc {
       return(organizations[_ethAddress].name);
   }
 
+  function validOrg() public view returns(bool){
+    if(organizations[msg.sender].ethAddress==msg.sender){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 //Register User KYC by registered Orgs
   function registerKYC(uint _uname , string memory _name, string memory _location,bool _kycStatus) public payable isOrgValid returns(bool){
       require(customers[_uname].uname!=_uname,"User already exists");

@@ -125,6 +125,14 @@ contract Kyc {
       return false;
     }
   }
+  function validAdmin() public view returns(bool){
+    if(admin==msg.sender){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
 //Register User KYC by registered Orgs
   function registerKYC(uint _uname , string memory _name, string memory _location,bool _kycStatus) public payable isOrgValid returns(bool){

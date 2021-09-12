@@ -5,23 +5,33 @@ import NavBar from './NavBar'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 class Customer extends Component {
-  async componentWillMount() {
+  async componentDidMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
+    document.title = this.props.title
   }
+  async componentWillUnmount(){
+    await window.ethereum.removeListener('accountsChanged', this.handleAccountsChanged);
+  }
+
 
   async loadBlockchainData() {
     //Declare Web3
-    const web3 = window.web3
+    const ethereum = window.ethereum
+    let web3 = new Web3(window.ethereum)
     //Load account
-    const accounts = await web3.eth.getAccounts()
+    window.ethereum.on('accountsChanged',this.handleAccountsChanged)
+    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
     this.setState({account : accounts[0]})
     //Network ID
-    const networkId = await web3.eth.net.getId()
+    const networkId = await ethereum.request({ method: 'net_version' })
     const networkData = Kyc.networks[networkId]
     //IF got connection, get data from contracts
     if(networkData){
       const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
+      this.setState({kyc});
+      let validAdmin = await kyc.methods.validAdmin().call({from:this.state.account});
+      this.setState({validAdmin})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -29,19 +39,20 @@ class Customer extends Component {
 
   }
 
+
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
     }
   }
 
+  handleAccountsChanged = (accounts) =>{
+    this.setState({account : accounts[0]})
+  }
   constructor(props){
     super(props);
     this.state={

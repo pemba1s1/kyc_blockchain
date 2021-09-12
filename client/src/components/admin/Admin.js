@@ -37,6 +37,7 @@ export default class Admin extends Component {
       this.setState({kyc});
       let validAdmin = await kyc.methods.validAdmin().call({from:this.state.account});
       this.setState({validAdmin})
+      this.setState({loading:false})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -103,7 +104,7 @@ export default class Admin extends Component {
   constructor(props){
     super(props);
     this.state={
-      validAdmin:false,
+      validAdmin:'false',
       orgName:'',
       ethAddress:'',
       account:'',
@@ -112,17 +113,23 @@ export default class Admin extends Component {
       name:'',
       added: '',
       removed:'',
-      loading:''
+      loading:'true'
     }
   }
 
   render() {
     const validAdmin = this.state.validAdmin
+    let content 
+    if(this.state.loading){
+      content = <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Loading....</h2></Container>
+    }else{
+      content = validAdmin? 
+      <NavBar account={this.state.account}/>:
+      <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Only Admin are allowed</h2></Container>
+    }
     return ( 
       <Router>
-      {validAdmin ?
-      <NavBar account={this.state.account}/>:
-      <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Only Admin are allowed</h2></Container>}
+      {content}
         
       <Switch>
         <Route exact path="/admin/add">

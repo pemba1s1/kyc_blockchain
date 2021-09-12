@@ -34,6 +34,7 @@ class Org extends Component {
       this.setState({kyc});
       let validOrg = await kyc.methods.validOrg().call({from:this.state.account});
       this.setState({validOrg})
+      this.setState({loading:false})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -61,21 +62,29 @@ class Org extends Component {
       account : '',
       org :{},
       orgName : '',
-      validOrg: false
+      validOrg: false,
+      loading:true
     }
   }
 
   render() {
     console.log(this.state.org)
     const validOrg = this.state.validOrg
-    return (
-      <div>
-      {validOrg ? 
+    let content
+    if(this.state.loading){
+      content = <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Loading....</h2></Container>
+    }
+    else{
+      content = validOrg ? 
       <NavBar account={this.state.account} />:
       <Container style={{textAlign: "center",paddingTop:"30px"}}>
         <h2>Only Organization added by admin are allowed</h2>
         <p>Contact Admin if you want to gain access..</p>
-      </Container>}
+      </Container>
+    }
+    return (
+      <div>
+        {content}
       </div>
       
       

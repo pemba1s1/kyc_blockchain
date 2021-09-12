@@ -22,6 +22,9 @@ class Org extends Component {
     //IF got connection, get data from contracts
     if(networkData){
       const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
+      this.setState({org:kyc});
+      let orgName = await kyc.methods.viewOrg().call();
+      this.setState({orgName})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -46,12 +49,18 @@ class Org extends Component {
     super(props);
     this.state={
       account : '',
+      org :{},
+      orgName : '',
     }
   }
 
   render() {
+    console.log(this.state.org)
+    const orgName = this.state.orgName
     return (
-      <NavBar account={this.state.account}></NavBar>
+      <div>{validOrg ? <NavBar account={this.state.account} />:<div>Org not valid</div>}</div>
+      
+      
     );
   }
 }

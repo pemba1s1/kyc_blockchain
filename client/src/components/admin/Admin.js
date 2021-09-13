@@ -37,7 +37,7 @@ export default class Admin extends Component {
       this.setState({kyc});
       let validAdmin = await kyc.methods.validAdmin().call({from:this.state.account});
       this.setState({validAdmin})
-      this.setState({loading:false})
+      this.setState({loadingadmin:false})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -113,14 +113,15 @@ export default class Admin extends Component {
       name:'',
       added: '',
       removed:'',
-      loading:'true'
+      loading:'true',
+      loadingadmin:'true'
     }
   }
 
   render() {
     const validAdmin = this.state.validAdmin
     let content 
-    if(this.state.loading){
+    if(this.state.loadingadmin){
       content = <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Loading....</h2></Container>
     }else{
       content = validAdmin? 

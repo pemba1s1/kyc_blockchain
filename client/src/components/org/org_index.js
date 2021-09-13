@@ -4,6 +4,11 @@ import Web3 from 'web3'
 import NavBar from './NavBar'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Container from "react-bootstrap/esm/Container";
+import { BrowserRouter as Router,Switch,Route } from "react-router-dom";
+import Addkyc from "./addKyc";
+import Viewkyc from "./viewKyc";
+import Requestkyc from "./requestKyc";
+import Updatekyc from "./updateKyc";
 
 class Org extends Component {
   async componentDidMount() {
@@ -83,9 +88,27 @@ class Org extends Component {
       </Container>
     }
     return (
+      <Router>
       <div>
         {content}
       </div>
+      
+
+      <Switch>
+        <Route exact path="/Organization/add">
+          <Addkyc />
+        </Route>
+        <Route exact path="/Organization/view">
+          <Viewkyc />
+        </Route>
+        <Route exact path="/Organization/request">
+          <Requestkyc />
+        </Route>
+        <Route exact path="/Organization/update">
+          <Updatekyc />
+        </Route>
+      </Switch>
+      </Router>
       
       
     );

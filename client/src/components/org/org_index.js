@@ -9,6 +9,12 @@ import Addkyc from "./addKyc";
 import Viewkyc from "./viewKyc";
 import Requestkyc from "./requestKyc";
 import Updatekyc from "./updateKyc";
+import Deleterequest from "./deleteRequest";
+import Listrequest from "./list_request";
+
+
+const {create} = require('ipfs-http-client')
+const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 class Org extends Component {
   async componentDidMount() {
@@ -31,15 +37,16 @@ class Org extends Component {
     this.setState({account : accounts[0]})
     //Network ID
     const networkId = await ethereum.request({ method: 'net_version' })
-    console.log(networkId)
     const networkData = Kyc.networks[networkId]
     //IF got connection, get data from contracts
     if(networkData){
       const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
       this.setState({kyc});
       let validOrg = await kyc.methods.validOrg().call({from:this.state.account});
+      let orgDetail = await kyc.methods.getYourOrgDetail().call({fromt:this.state.account})
+      this.setState({orgDetail})
       this.setState({validOrg})
-      this.setState({loading:false})
+      this.setState({loadingorg:false})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -61,27 +68,167 @@ class Org extends Component {
     this.setState({account : accounts[0]})
   }
 
+
+  handleSubmit = async(event) => {
+    event.preventDefault()
+    this.setState({loading:true})
+    await ipfs.add(JSON.stringify(this.state.data)).then(result=>{
+      this.setState({jsonHash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.photo).then(result=>{
+      this.setState({photohash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.citizenship_front).then(result=>{
+      this.setState({citizenship_front_hash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.citizenship_back).then(result=>{
+      this.setState({citizenship_back_hash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    let added =this.state.kyc.methods.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photohash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
+    .send({from:this.state.account})
+    .on('transactionHash',(hash)=>{
+      this.setState({loading : false})
+      this.setState({added})
+    }).catch(err=>{
+      console.log(err.message)
+    })
+  }
+
+  updateKyc = async (event) =>{
+    event.preventDefault()
+    this.setState({loading:true})
+    await ipfs.add(JSON.stringify(this.state.data)).then(result=>{
+      this.setState({jsonHash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.photo).then(result=>{
+      this.setState({photohash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.citizenship_front).then(result=>{
+      this.setState({citizenship_front_hash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    await ipfs.add(this.state.citizenship_back).then(result=>{
+      this.setState({citizenship_back_hash:result.cid.toV1().toString()})
+    },error=>{
+      console.log(error)
+    })
+    let added =this.state.kyc.methods.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photohash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
+    .send({from:this.state.account})
+    .on('transactionHash',(hash)=>{
+      this.setState({loading : false})
+      this.setState({added})
+    }).catch(err=>{
+      console.log(err.message)
+    })
+  }
+
+  handleJsonChange = (event) => {
+    const target = event.target
+    const name = target.name
+    const value = target.value
+    this.setState({data:{
+      ...this.state.data,
+      [name]:value
+    }})
+  }
+  handleChange = (event) => {
+    const target = event.target
+    const name = target.name
+    const value = target.value
+    this.setState({[name]:value})
+  }
+  captureFile = (event) => {
+    const name = event.target.name
+    const file = event.target.files[0]
+    this.setState({[name]:file})
+  }
+
+  onRequest = (event) =>{
+    event.preventDefault();
+    this.setState({loading:true})
+    let req = this.state.kyc.methods.requestKYC(this.state.eth_address)
+    .send({from:this.state.account})
+    .on('transactionHash',(hash)=>{
+      this.setState({loading : false})
+      this.setState({req})
+      console.log(req)
+    }).catch(err=>{
+      console.log(err.message)
+    })
+  }
+
+  onDeleteRequest =  (event)=>{
+    event.preventDefault()
+    this.setState({loading:true})
+    let del =this.state.kyc.methods.deleteRequestOrg(this.state.req_count)
+      .send({ from: this.state.account })
+      .on('transactionHash', (hash) => {
+        this.setState({
+         loading:false
+       })
+        this.setState({del})
+      }).catch(error=>{
+        console.log(error.message)
+      })
+  }
+
+
+
   constructor(props){
     super(props);
     this.state={
       account : '',
-      org :{},
-      orgName : '',
+      kyc :{},
+      orgDetail : '',
       validOrg: false,
-      loading:true
+      loading:false,
+      loadingorg:true,
+      data : {},
+      jsonHash : '',
+      photohash :'',
+      citizenship_front_hash : '',
+      citizenship_back_hash:'',
+      photo : '',
+      citizenship_front :'',
+      citizenship_back: '',
+      eth_address:'',
+      added:'',
+      req:'',
+      req_count:'',
+      del:'',
+      custDetail:''
     }
   }
 
   render() {
-    console.log(this.state.org)
     const validOrg = this.state.validOrg
     let content
-    if(this.state.loading){
+    if(this.state.loadingorg){
       content = <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Loading....</h2></Container>
     }
     else{
       content = validOrg ? 
-      <NavBar account={this.state.account} />:
+      <div>
+        <NavBar account={this.state.account} />
+        <Container>
+
+        </Container>
+      </div>
+      
+      :
       <Container style={{textAlign: "center",paddingTop:"30px"}}>
         <h2>Only Organization added by admin are allowed</h2>
         <p>Contact Admin if you want to gain access..</p>
@@ -96,16 +243,46 @@ class Org extends Component {
 
       <Switch>
         <Route exact path="/Organization/add">
-          <Addkyc />
+          <Addkyc 
+          added={this.state.added}
+          loading={this.state.loading}
+          captureFile={this.captureFile}
+          handleSubmit={this.handleSubmit} 
+          handleChange={this.handleChange} 
+          handleJsonChange={this.handleJsonChange}/>
         </Route>
         <Route exact path="/Organization/view">
-          <Viewkyc />
+          <Viewkyc account={this.state.account} kyc={this.state.kyc}/>
         </Route>
         <Route exact path="/Organization/request">
-          <Requestkyc />
+          <Requestkyc
+          req={this.state.req}
+          loading={this.state.loading}
+          onRequest={this.onRequest}
+          handleChange  ={this.handleChange} />
         </Route>
-        <Route exact path="/Organization/update">
-          <Updatekyc />
+        <Route exact path="/Organization/update/">
+          <Updatekyc
+          added={this.state.added}
+          loading={this.state.loading}
+          captureFile={this.captureFile}
+          updateKyc={this.updateKyc} 
+          handleChange={this.handleChange} 
+          handleJsonChange={this.handleJsonChange} />
+        </Route>
+        <Route exact path="/Organization/delete">
+          <Deleterequest
+          del={this.state.del}
+          loading={this.state.loading}
+          onDeleteRequest={this.onDeleteRequest}
+          handleChange={this.handleChange} />
+        </Route>
+        <Route exact path="/Organization/list">
+          <Listrequest
+          kyc={this.state.kyc}
+          account={this.state.account}
+          handleChange={this.handleChange}
+          onDeleteRequest={this.onDeleteRequest} />
         </Route>
       </Switch>
       </Router>

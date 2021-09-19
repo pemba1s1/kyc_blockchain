@@ -2,20 +2,21 @@ import React, { Component } from 'react'
 import Navbar from 'react-bootstrap/Navbar' 
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
+import {Link} from 'react-router-dom'
 
 export default class NavBar extends Component {
     render() {
         return (
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">KYC Blockchain</Navbar.Brand>
+                    <Link className="navbar-brand" to="/Customer">KYC Blockchain</Link>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#add">View KYC</Nav.Link>
-                        <Nav.Link href="#edit">View Request</Nav.Link>
-                        <Nav.Link href="#request">Revoke Access</Nav.Link>
-                        <Nav.Link href="#view">View Organizations</Nav.Link>
+                        <Link className="nav-link" to='/Customer/view'>View KYC</Link>
+                        <Link className="nav-link" to='/Customer/view_request'>View Request</Link>
+                        <Link className="nav-link" to='/Customer/revoke'>Revoke Access</Link>
+                        <Link className="nav-link" to='/Customer/view_org'>View Organizations</Link>
                     </Nav>
                     <Nav>
                         <Nav.Link>{this.props.account}</Nav.Link>

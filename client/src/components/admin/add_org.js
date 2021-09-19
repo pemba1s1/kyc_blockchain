@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Container from "react-bootstrap/esm/Container";
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"

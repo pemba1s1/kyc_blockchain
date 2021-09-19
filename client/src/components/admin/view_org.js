@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Container from "react-bootstrap/esm/Container";
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
@@ -20,9 +20,9 @@ const Vieworg = (props) =>{
                 <Button  variant="primary" type="submit" value="Submit" >Search Organization</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px"}}>
-            {props.name ? 
-            <h3>Bank Name : {props.name }<br/>
-            Eth Address : {props.address} </h3>
+            {props.orgDetail ? 
+            <h3>Bank Name : {props.orgDetail.name }<br/>
+            Eth Address : {props.orgDetail.ethAddress} </h3>
             :<p></p>}
             </div>
         </Container>

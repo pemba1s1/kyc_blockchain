@@ -15,7 +15,7 @@ contract('KYC',accounts=>{
         it('Org added',async()=>{
             await kyc.addOrg('Nabil','0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
             const name = await kyc.viewOrg('0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
-            assert.equal(name,"Nabil")
+            assert.equal(name[0],"Nabil")
         })
     })
 
@@ -31,7 +31,6 @@ contract('KYC',accounts=>{
             await kyc.giveAccessKYC(0,'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',true,{from : '0x1e84892176f6aE044E620C61133Ce5532166d8DC'})
             const name = await kyc.viewKYC('0x1e84892176f6aE044E620C61133Ce5532166d8DC',{from : '0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
             assert.equal(name[1],'json')
-            assert.equal(name[4][0],'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025')
         })
     })
 
@@ -48,7 +47,12 @@ contract('KYC',accounts=>{
             await kyc.revokeAccessKYC('0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025',{from:'0x1e84892176f6aE044E620C61133Ce5532166d8DC'})
         })
     })
-
+    describe("deleteRequestOrg()",async()=>{
+        it("Request deleted by org",async()=>{
+            await kyc.requestKYC('0x1e84892176f6aE044E620C61133Ce5532166d8DC',{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+            await kyc.deleteRequestOrg(0,{from :'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})
+        })
+    })
     describe("removeKYC()",async()=>{
         it("kyc removed",async()=>{
             await kyc.requestKYC('0x1e84892176f6aE044E620C61133Ce5532166d8DC',{from:'0xD0B5BAED90404ADaB3163bFFa9Ba6543C9301025'})

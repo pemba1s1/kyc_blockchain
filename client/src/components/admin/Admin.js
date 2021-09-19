@@ -60,14 +60,16 @@ export default class Admin extends Component {
   }
 
   handleSubmit = (event) => {
+    event.preventDefault();
     this.setState({loading:true})
     let added=this.state.kyc.methods.addOrg(this.state.orgName,this.state.ethAddress)
     .send({from:this.state.account})
     .on('transactionHash', (hash)=>{
       this.setState({loading : false})
       this.setState({added})
+    }).catch(err=>{
+      console.log(err.message)
     })
-    event.preventDefault();
   }
 
   handleChange = (event) => {
@@ -80,23 +82,27 @@ export default class Admin extends Component {
   }
 
   viewOrg = (event) => {
-      let name = this.state.kyc.methods.viewOrg(this.state.address).call({from:this.state.account})
-      name.then(result=>{
-          this.setState({name:result});
-        } )
+    event.preventDefault();
+    let orgDetail = this.state.kyc.methods.viewOrg(this.state.address).call({from:this.state.account})
+    orgDetail.then(result=>{
+        this.setState({orgDetail:result});
+      } ).catch(err=>{
+        console.log(err.message)
+      })
       
-      event.preventDefault();
   }
 
   removeOrg = (event) =>{
-      this.setState({loading:true})
-      let removed = this.state.kyc.methods.removeOrg(this.state.address)
-      .send({from:this.state.account})
-      .on('transactionHash', (hash)=>{
-        this.setState({loading : false})
-        this.setState({removed})
-      })
-      event.preventDefault();
+    event.preventDefault();
+    this.setState({loading:true})
+    let removed = this.state.kyc.methods.removeOrg(this.state.address)
+    .send({from:this.state.account})
+    .on('transactionHash', (hash)=>{
+      this.setState({loading : false})
+      this.setState({removed})
+    }).catch(err=>{
+      console.log(err.message)
+    })
   }
 
   
@@ -110,10 +116,10 @@ export default class Admin extends Component {
       account:'',
       kyc:{},
       address:'',
-      name:'',
+      orgDetail:'',
       added: '',
       removed:'',
-      loading:'true',
+      loading:'',
       loadingadmin:'true'
     }
   }
@@ -137,7 +143,7 @@ export default class Admin extends Component {
           <Addorg loading={this.state.loading} added={this.state.added} orgName={this.state.orgName} ethAddress={this.state.ethAddress} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
         </Route>
         <Route exact path='/admin/view'>
-          <Vieworg name={this.state.name} address={this.state.address} viewOrg={this.viewOrg} handleChange={this.handleChange}/>
+          <Vieworg orgDetail={this.state.orgDetail} address={this.state.address} viewOrg={this.viewOrg} handleChange={this.handleChange}/>
         </Route>
         <Route exact path="/admin/remove">
           <Removeorg loading={this.state.loading} removed={this.state.removed} address={this.state.address} removeOrg={this.removeOrg} handleChange={this.handleChange}/>

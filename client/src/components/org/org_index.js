@@ -226,6 +226,8 @@ class Org extends Component {
       <>
         <NavBar account={this.state.account} />
         <Switch>
+          <Route exact path="/Organization/">
+          </Route>
           <Route exact path="/Organization/add">
             <Addkyc 
             added={this.state.added}

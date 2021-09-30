@@ -87,6 +87,8 @@ class Customer extends Component {
       <>
       <NavBar account={this.state.account} />
       <Switch>
+        <Route exact path="/Customer/">
+        </Route>
         <Route exact path="/Customer/view">
           <Viewdetail custDetail={this.state.custDetail}/>
         </Route>

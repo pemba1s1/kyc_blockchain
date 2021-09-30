@@ -9,6 +9,7 @@ import Viewdetail from "./viewDetail";
 import Viewrequest from "./viewRequest";
 import Revoke from "./revoke";
 import Vieworg from "./viewOrg";
+import { NotFound } from "../404";
 
 class Customer extends Component {
   async componentDidMount() {
@@ -97,6 +98,9 @@ class Customer extends Component {
         </Route>
         <Route exact path="/Customer/view_org">
           <Vieworg custDetail={this.state.custDetail} kyc={this.state.kyc} account={this.state.account}/>
+        </Route>
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
       </>

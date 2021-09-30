@@ -8,6 +8,7 @@ import Removeorg from './remove_org'
 import Addorg from './add_org'
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 import Container from "react-bootstrap/esm/Container";
+import { NotFound } from "../404";
 export default class Admin extends Component {
   async componentDidMount() {
     await this.loadWeb3()
@@ -141,6 +142,9 @@ export default class Admin extends Component {
         </Route>
         <Route exact path="/admin/remove">
           <Removeorg loading={this.state.loading} removed={this.state.removed} address={this.state.address} removeOrg={this.removeOrg} handleChange={this.handleChange}/>
+        </Route>
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
       </> 

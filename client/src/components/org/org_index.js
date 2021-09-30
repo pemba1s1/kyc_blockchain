@@ -11,6 +11,7 @@ import Requestkyc from "./requestKyc";
 import Updatekyc from "./updateKyc";
 import Deleterequest from "./deleteRequest";
 import Listrequest from "./list_request";
+import { NotFound } from "../404";
 
 
 const {create} = require('ipfs-http-client')
@@ -266,6 +267,9 @@ class Org extends Component {
             account={this.state.account}
             handleChange={this.handleChange}
             onDeleteRequest={this.onDeleteRequest} />
+          </Route>
+          <Route path="*">
+            <NotFound />
           </Route>
         </Switch>
       </>      

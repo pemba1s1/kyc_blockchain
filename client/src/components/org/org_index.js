@@ -66,6 +66,7 @@ class Org extends Component {
 
   handleAccountsChanged = (accounts) =>{
     this.setState({account : accounts[0]})
+    window.location.reload()
   }
 
 
@@ -221,13 +222,53 @@ class Org extends Component {
     }
     else{
       content = validOrg ? 
-      <div>
+      <>
         <NavBar account={this.state.account} />
-        <Container>
-
-        </Container>
-      </div>
-      
+        <Switch>
+          <Route exact path="/Organization/add">
+            <Addkyc 
+            added={this.state.added}
+            loading={this.state.loading}
+            captureFile={this.captureFile}
+            handleSubmit={this.handleSubmit} 
+            handleChange={this.handleChange} 
+            handleJsonChange={this.handleJsonChange}/>
+          </Route>
+          <Route exact path="/Organization/view">
+            <Viewkyc account={this.state.account} kyc={this.state.kyc}/>
+          </Route>
+          <Route exact path="/Organization/request">
+            <Requestkyc
+            req={this.state.req}
+            loading={this.state.loading}
+            onRequest={this.onRequest}
+            handleChange  ={this.handleChange} />
+          </Route>
+          <Route exact path="/Organization/update/">
+            <Updatekyc
+            added={this.state.added}
+            loading={this.state.loading}
+            captureFile={this.captureFile}
+            updateKyc={this.updateKyc} 
+            handleChange={this.handleChange} 
+            handleJsonChange={this.handleJsonChange} />
+          </Route>
+          <Route exact path="/Organization/delete">
+            <Deleterequest
+            del={this.state.del}
+            loading={this.state.loading}
+            onDeleteRequest={this.onDeleteRequest}
+            handleChange={this.handleChange} />
+          </Route>
+          <Route exact path="/Organization/list">
+            <Listrequest
+            kyc={this.state.kyc}
+            account={this.state.account}
+            handleChange={this.handleChange}
+            onDeleteRequest={this.onDeleteRequest} />
+          </Route>
+        </Switch>
+      </>      
       :
       <Container style={{textAlign: "center",paddingTop:"30px"}}>
         <h2>Only Organization added by admin are allowed</h2>
@@ -236,55 +277,7 @@ class Org extends Component {
     }
     return (
       <Router>
-      <div>
         {content}
-      </div>
-      
-
-      <Switch>
-        <Route exact path="/Organization/add">
-          <Addkyc 
-          added={this.state.added}
-          loading={this.state.loading}
-          captureFile={this.captureFile}
-          handleSubmit={this.handleSubmit} 
-          handleChange={this.handleChange} 
-          handleJsonChange={this.handleJsonChange}/>
-        </Route>
-        <Route exact path="/Organization/view">
-          <Viewkyc account={this.state.account} kyc={this.state.kyc}/>
-        </Route>
-        <Route exact path="/Organization/request">
-          <Requestkyc
-          req={this.state.req}
-          loading={this.state.loading}
-          onRequest={this.onRequest}
-          handleChange  ={this.handleChange} />
-        </Route>
-        <Route exact path="/Organization/update/">
-          <Updatekyc
-          added={this.state.added}
-          loading={this.state.loading}
-          captureFile={this.captureFile}
-          updateKyc={this.updateKyc} 
-          handleChange={this.handleChange} 
-          handleJsonChange={this.handleJsonChange} />
-        </Route>
-        <Route exact path="/Organization/delete">
-          <Deleterequest
-          del={this.state.del}
-          loading={this.state.loading}
-          onDeleteRequest={this.onDeleteRequest}
-          handleChange={this.handleChange} />
-        </Route>
-        <Route exact path="/Organization/list">
-          <Listrequest
-          kyc={this.state.kyc}
-          account={this.state.account}
-          handleChange={this.handleChange}
-          onDeleteRequest={this.onDeleteRequest} />
-        </Route>
-      </Switch>
       </Router>
       
       

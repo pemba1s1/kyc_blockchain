@@ -11,6 +11,13 @@ export default class Viewrequest extends Component{
             this.setState({list:res})
         })
     }
+
+    componentDidUpdate=()=>{
+        this.props.kyc.methods.viewRequestCust().call({from:this.props.account})
+        .then(res=>{
+            this.setState({list:res})
+        })
+    }
     
     onChange =async(event) => {
         event.preventDefault();

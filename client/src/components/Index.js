@@ -3,14 +3,13 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row"
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import kyc from '../img/kyc.jpeg'
 import {Link} from 'react-router-dom'
 
 const Index = () =>{
     return(
         <Container fluid style={{height: '100vh'}}>
           <Row style={{height: "100%" ,textAlign: "center"}}>
-            <Col style={{backgroundImage:`url(${kyc})`,backgroundSize:'Cover',backgroundRepeat:'no-repeat'}}>
+            <Col style={{backgroundImage:`url(/img/kyc.jpeg)`,backgroundSize:'Cover',backgroundRepeat:'no-repeat'}}>
 
             </Col>
             <Col sm={5} style={{backgroundColor:"white"}}>

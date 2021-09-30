@@ -8,7 +8,6 @@ import Removeorg from './remove_org'
 import Addorg from './add_org'
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 import Container from "react-bootstrap/esm/Container";
-
 export default class Admin extends Component {
   async componentDidMount() {
     await this.loadWeb3()
@@ -57,6 +56,7 @@ export default class Admin extends Component {
 
   handleAccountsChanged = (accounts) =>{
     this.setState({account : accounts[0]})
+    window.location.reload()
   }
 
   handleSubmit = (event) => {
@@ -65,8 +65,7 @@ export default class Admin extends Component {
     let added=this.state.kyc.methods.addOrg(this.state.orgName,this.state.ethAddress)
     .send({from:this.state.account})
     .on('transactionHash', (hash)=>{
-      this.setState({loading : false})
-      this.setState({added})
+      this.setState({loading : false,added:added})
     }).catch(err=>{
       console.log(err.message)
     })
@@ -130,14 +129,9 @@ export default class Admin extends Component {
     if(this.state.loadingadmin){
       content = <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Loading....</h2></Container>
     }else{
-      content = validAdmin? 
-      <NavBar account={this.state.account}/>:
-      <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Only Admin are allowed</h2></Container>
-    }
-    return ( 
-      <Router>
-      {content}
-        
+      content = validAdmin?
+      <>
+      <NavBar account={this.state.account}/>
       <Switch>
         <Route exact path="/admin/add">
           <Addorg loading={this.state.loading} added={this.state.added} orgName={this.state.orgName} ethAddress={this.state.ethAddress} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
@@ -149,7 +143,14 @@ export default class Admin extends Component {
           <Removeorg loading={this.state.loading} removed={this.state.removed} address={this.state.address} removeOrg={this.removeOrg} handleChange={this.handleChange}/>
         </Route>
       </Switch>
-    </Router>
+      </> 
+      :
+      <Container style={{textAlign: "center",paddingTop:"30px"}}><h2>Only Admin are allowed</h2></Container>
+    }
+    return ( 
+      <Router>
+      {content}
+      </Router>
     );
 
     

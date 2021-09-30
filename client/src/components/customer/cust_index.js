@@ -62,6 +62,7 @@ class Customer extends Component {
 
   handleAccountsChanged = (accounts) =>{
     this.setState({account : accounts[0]})
+    window.location.reload()
   }
   constructor(props){
     super(props);
@@ -82,19 +83,8 @@ class Customer extends Component {
     }
     else{
       content = validCust ? 
-      <NavBar account={this.state.account} />:
-      <Container style={{textAlign: "center",paddingTop:"30px"}}>
-        <h2>Customer Address not registered</h2>
-        <p>Consider changing account to registered one..</p>
-      </Container>
-    }
-    return (
-      <Router>
-      <div>
-        {content}
-      </div>
-      
-
+      <>
+      <NavBar account={this.state.account} />
       <Switch>
         <Route exact path="/Customer/view">
           <Viewdetail custDetail={this.state.custDetail}/>
@@ -109,6 +99,16 @@ class Customer extends Component {
           <Vieworg custDetail={this.state.custDetail} kyc={this.state.kyc} account={this.state.account}/>
         </Route>
       </Switch>
+      </>
+      :
+      <Container style={{textAlign: "center",paddingTop:"30px"}}>
+        <h2>Customer Address not registered</h2>
+        <p>Consider changing account to registered one..</p>
+      </Container>
+    }
+    return (
+      <Router>
+        {content}
       </Router>
     );
   }

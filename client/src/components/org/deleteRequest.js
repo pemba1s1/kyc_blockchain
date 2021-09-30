@@ -1,11 +1,12 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {Form , Container, Button } from "react-bootstrap"
-import useDocumentTitle from '../useDoucmentTitle'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 export default function Deleterequest(props){
-    useDocumentTitle("Delete Request")
+    useEffect(() => {
+        document.title='Delete Request'
+    })
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Request Customer KYC </h2>

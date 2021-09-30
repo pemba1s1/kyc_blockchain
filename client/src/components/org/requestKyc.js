@@ -1,11 +1,12 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {Form , Container, Button } from "react-bootstrap"
-import useDocumentTitle from '../useDoucmentTitle'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 export default function Requestkyc(props){
-    useDocumentTitle("Request KYC")
+    useEffect(() => {
+        document.title='Request KYC'
+    })
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Request Customer KYC </h2>

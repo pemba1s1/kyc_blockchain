@@ -1,12 +1,13 @@
-import React from "react";
+import React,{useEffect} from "react";
 import Container from "react-bootstrap/esm/Container";
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import 'bootstrap/dist/css/bootstrap.min.css'
-import useDocumentTitle from '../useDoucmentTitle'
 
 const Vieworg = (props) =>{
-    useDocumentTitle("Admin | View Org")
+    useEffect(() => {
+        document.title='Admin | View Org Details'
+    })
     return(
         <Container>
             <Form style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}} onSubmit={props.viewOrg}>

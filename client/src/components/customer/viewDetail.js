@@ -1,7 +1,10 @@
-import React from "react"
+import React,{useEffect} from "react"
 import { Container } from "react-bootstrap"
 
 export default function Viewdetail(props){
+    useEffect(() => {
+        document.title='Your Details'
+    })
     return(
         <Container>
         <br />

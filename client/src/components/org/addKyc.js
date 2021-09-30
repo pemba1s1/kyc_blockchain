@@ -1,10 +1,11 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {Form , Container, Button } from "react-bootstrap"
-import useDocumentTitle from '../useDoucmentTitle'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function Addkyc(props){
-    useDocumentTitle("Add KYC")
+    useEffect(() => {
+        document.title='Add KYC'
+    })
     return(
         <Container>
         {console.log(props)}

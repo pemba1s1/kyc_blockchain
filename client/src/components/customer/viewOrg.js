@@ -1,8 +1,11 @@
-import React from "react"
+import React,{useEffect} from "react"
 import { Container } from "react-bootstrap"
 import { Table,Button } from "react-bootstrap"
 
 export default function Vieworg(props){
+    useEffect(() => {
+        document.title='View Organization'
+    })
     return(
         <Container>
         <br/>

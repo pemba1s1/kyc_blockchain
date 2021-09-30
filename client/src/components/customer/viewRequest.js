@@ -12,6 +12,7 @@ export default class Viewrequest extends Component{
         })
     }
 
+
     componentDidUpdate=()=>{
         this.props.kyc.methods.viewRequestCust().call({from:this.props.account})
         .then(res=>{

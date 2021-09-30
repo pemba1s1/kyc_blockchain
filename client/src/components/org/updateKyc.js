@@ -1,10 +1,11 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {Form , Container, Button } from "react-bootstrap"
-import useDocumentTitle from '../useDoucmentTitle'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function Updatekyc(props){
-    useDocumentTitle("Update KYC")
+    useEffect(() => {
+        document.title='Update KYC'
+    })
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Update new KYC </h2>

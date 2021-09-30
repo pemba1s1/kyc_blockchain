@@ -134,6 +134,8 @@ export default class Admin extends Component {
       <>
       <NavBar account={this.state.account}/>
       <Switch>
+        <Route exact path="/admin/">
+        </Route>
         <Route exact path="/admin/add">
           <Addorg loading={this.state.loading} added={this.state.added} orgName={this.state.orgName} ethAddress={this.state.ethAddress} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
         </Route>

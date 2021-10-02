@@ -9,7 +9,7 @@ export default function Vieworg(props){
     return(
         <Container>
         <br/>
-            <Table>
+            <Table striped hover responsive="sm">
                 <thead>
                     <tr>
                         <th>Index</th>
@@ -22,7 +22,7 @@ export default function Vieworg(props){
                         <tr key={index}>
                             <td>{index}</td>
                             <td>{org}</td>
-                            <td>
+                            <td style={{width:"20%"}}>
                                 <Button variant="danger" onClick={()=>{
                                     props.kyc.methods.revokeAccessKYC(org).send({from:props.account})
                                         .then(res=>{

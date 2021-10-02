@@ -20,27 +20,23 @@ export default class Viewrequest extends Component{
         })
     }
     
-    onChange =async(event) => {
+    onChange =async(event,req_count,address,isAllowed) => {
         event.preventDefault();
-        const value=event.target.value
-        await this.setState({isAllowed:value})
-        console.log(this.state.isAllowed,this.req_count.value,this.address.value)
-        this.props.kyc.methods.giveAccessKYC(this.req_count.value,this.address.value,this.state.isAllowed)
+        this.props.kyc.methods.giveAccessKYC(req_count,address,isAllowed)
             .send({from:this.props.account})
+        console.log(req_count,address,isAllowed)
     }
     constructor(props) {
         super(props);
         this.state = {
             list : [],
-            Address:'',
-            isAllowed:''
         };
     }
     render(){
     return(
         <Container>
         <br/>
-        <Table style={{margin:"auto",width:"90%",padding:"200px 10px 10px 10px"}} striped bordered hover responsive="sm">
+        <Table  striped hover responsive="sm">
             <thead>
                 <tr>
                     <th>Request Number</th>
@@ -51,15 +47,15 @@ export default class Viewrequest extends Component{
             <tbody>
         {
             this.state.list.map((person, index) => (
-                <tr key={person.req_count}>
+                <tr key={index}>
                     <td>{person.req_count}</td>
                     <td>{person.Address}</td>
-                    <td><Form >
-                        <Form.Control type="hidden" name="req_count" value={person.req_count} ref={(input) => { this.req_count = input }}/>
-                        <Form.Control type="hidden" name="Address" value={person.Address} ref={(input) => { this.address = input }}/>
-                        <Button variant="primary" onClick={this.onChange} type="submit" name="isAllowed" value='true'>Accept</Button>
-                        <Button variant="danger" onClick={this.onChange} type="submit" name="isAllowed" value='false'>Decline</Button>
-                    </Form></td>
+                    <td style={{width:"20%"}}>
+                    <Form >
+                        <Button variant="primary" onClick={(event)=>{this.onChange(event,person.req_count,person.Address,true)}} type="submit" name="isAllowed" >Accept</Button>&nbsp;&nbsp;&nbsp;
+                        <Button variant="danger" onClick={(event)=>{this.onChange(event,person.req_count,person.Address,false)}} type="submit" name="isAllowed" >Decline</Button>
+                    </Form>
+                    </td>
                 </tr>
             ))
         }

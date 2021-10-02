@@ -11,6 +11,12 @@ export default class Listrequest extends Component{
             this.setState({list:res})
         })
     }
+    componentDidUpdate=()=>{
+        this.props.kyc.methods.listRequest().call({from:this.props.account})
+        .then(res=>{
+            this.setState({list:res})
+        })
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -21,7 +27,7 @@ export default class Listrequest extends Component{
     return(
         <Container>
         <br/>
-        <Table style={{margin:"auto",width:"90%",padding:"200px 10px 10px 10px"}} striped bordered hover responsive="sm">
+        <Table striped hover responsive="sm">
             <thead>
                 <tr>
                     <th>Request Number</th>
@@ -35,7 +41,7 @@ export default class Listrequest extends Component{
                 <tr key={person.req_count}>
                     <td>{person.req_count}</td>
                     <td>{person.Address}</td>
-                    <td><Form onSubmit={this.props.onDeleteRequest}>
+                    <td style={{width:"10%"}}><Form onSubmit={this.props.onDeleteRequest}>
                         <Form.Control type="hidden" value={person.req_count} onChange={this.props.handleChange}/>
                         <Button variant="danger" type="submit">Delete</Button>
                     </Form></td>

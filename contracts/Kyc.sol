@@ -192,7 +192,7 @@ contract Kyc {
     string memory _photohash,
     string memory _citizenship_front_hash,
     string memory _citizenship_back_hash,
-    bool _kycStatus) public payable isOrgValid returns(bool){
+    bool _kycStatus) public isOrgValid returns(bool){
       require(customers[_custaddress].custAddress!=_custaddress,"User already exists");
       writeKYC(_custaddress,_jsonHash,_photohash,_citizenship_front_hash,_citizenship_back_hash,_kycStatus);
       requestKYC(_custaddress);
@@ -259,16 +259,19 @@ contract Kyc {
   }
   
   function deleteRequest(uint _reqcount,address _custaddress,address _ethAddress) internal{
-    uint index = findRequestIndex(_custaddress,msg.sender);
+    uint index = findRequestIndex(_custaddress,_ethAddress);
     kycrequestsbyorg[_ethAddress].kycrequestlist[_reqcount]=kycrequestsbyorg[_ethAddress].kycrequestlist[kycrequestsbyorg[_ethAddress].kycrequestlist.length-1];
     kycrequestsbyorg[_ethAddress].kycrequestlist.pop();
     kycrequestsbycust[_custaddress].kycrequestlist[index]=kycrequestsbycust[_custaddress].kycrequestlist[kycrequestsbycust[_custaddress].kycrequestlist.length-1];
     kycrequestsbycust[_custaddress].kycrequestlist.pop();
-    if(kycrequestsbyorg[_ethAddress].req_count>1){
+    if(kycrequestsbyorg[msg.sender].kycrequestlist.length!=_reqcount && kycrequestsbyorg[_ethAddress].req_count>1){
         kycrequestsbyorg[_ethAddress].kycrequestlist[_reqcount].req_count=_reqcount;
         address add = kycrequestsbyorg[_ethAddress].kycrequestlist[_reqcount].Address;
-        index = findRequestIndex(add, _ethAddress);
-        kycrequestsbycust[add].kycrequestlist[index].req_count=_reqcount;
+        if(kycrequestsbycust[add].kycrequestlist.length>0){
+            index = findRequestIndex(add, _ethAddress);
+            kycrequestsbycust[add].kycrequestlist[index].req_count=_reqcount;
+        }
+        
      }
     kycrequestsbyorg[_ethAddress].req_count--;
     emit requestRemoved(_reqcount,_ethAddress);

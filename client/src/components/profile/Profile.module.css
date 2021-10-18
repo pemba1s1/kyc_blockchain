@@ -1,0 +1,73 @@
+html{
+    height: 100%;
+  }
+  
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  
+  .bground {
+    background-image: url("https://wallpaperaccess.com/full/168798.jpg");
+    min-height: 100%;
+    background-size: auto;
+    background-color: blue;
+    margin: 0;
+    z-index: -1;
+  }
+  .container {
+    border-radius: 25px;
+    border: solid 1px;
+    width: 70%;
+    font-size: 1.32em;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 16%;
+    margin-top: 2%;
+    align-content: center;
+    z-index: 2;
+    backdrop-filter: blur(5px);
+    box-shadow: 15px 25px 45px rgba(0,0,0,0.7);
+    padding: 1em;
+  }
+  
+  .pic {
+    height: 130px;
+    width: 130px;
+  }
+  .header {
+    padding-left: 80%;
+    padding-top: 20px;
+  }
+  
+  .footer {
+    margin-top: auto;
+    width: 100%;
+    height: 30px; /* Height of the footer */
+    text-align: center;
+    color: black;
+    backdrop-filter: blur(50px);
+    z-index: 3;
+  }
+  
+  .boxes {
+    height: 5rem;
+    font-size: 1.25em;
+    backdrop-filter: blur(5px);
+    border-radius: 25px;
+  }
+  
+  .tr, td{
+    border-radius: 50px;
+    width: auto;
+    padding: 1em 1em 0.6em 5em;
+  }
+  
+  .govt{
+    width: 100%;
+    height: 400px;
+  }
+  
+  

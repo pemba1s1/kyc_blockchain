@@ -23,8 +23,8 @@ export default function Addorg (props){
           <Button variant="primary" type="submit" value="Submit" >Submit</Button>
       </Form>
       <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-            {props.loading && <p style={{color:'blue'}}>In Transaction...</p>}
-            {props.added && <p>Org Added</p>}
+            {props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
+            props.added && <p>Org Added</p>}
         </div>
   </Container>
     );

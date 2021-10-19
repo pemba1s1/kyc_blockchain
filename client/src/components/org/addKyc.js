@@ -20,8 +20,24 @@ export default function Addkyc(props){
                     <Form.Control type="text" name="name" onChange={props.handleJsonChange}></Form.Control>
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Location : </Form.Label>
-                    <Form.Control type="text" name="location" onChange={props.handleJsonChange}></Form.Control>
+                    <Form.Label>Father's Name : </Form.Label>
+                    <Form.Control type="text" name="fathername" onChange={props.handleJsonChange}></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Mother's Name : </Form.Label>
+                    <Form.Control type="text" name="mothername" onChange={props.handleJsonChange}></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Grandfather's Name : </Form.Label>
+                    <Form.Control type="text" name="grandfathername" onChange={props.handleJsonChange}></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Temporay Address : </Form.Label>
+                    <Form.Control type="text" name="taddress" onChange={props.handleJsonChange}></Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Permanent Address : </Form.Label>
+                    <Form.Control type="text" name="paddress" onChange={props.handleJsonChange}></Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>DOB : </Form.Label>
@@ -38,8 +54,8 @@ export default function Addkyc(props){
                 <br />
                 <Form.Group>
                     <Form.Label>Your Photo : </Form.Label>
-                    <Form.Control type="file" name="photo " onChange={props.captureFile}></Form.Control>
-                </Form.Group>   
+                    <Form.Control type="file" name="p_photo" onChange={props.captureFile}></Form.Control>
+                </Form.Group> 
                 <br />
                 <Form.Group>
                     <Form.Label>Citizenship Front : </Form.Label>
@@ -54,8 +70,7 @@ export default function Addkyc(props){
                 <Button variant="primary" type="submit" value="Submit" >Add</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-                {props.loading && <p style={{color:'blue'}}>Adding Customer KYC...</p>}
-                {props.added && <p>Customer KYC Added</p>}
+                {props.loading ? <p style={{color:'blue'}}>Adding Customer KYC...</p>:props.added && <p>Customer KYC Added</p>}
             </div>
         </Container>
     )

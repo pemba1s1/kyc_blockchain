@@ -206,12 +206,12 @@ contract Kyc {
     address,
     string memory,
     string memory,
-    bool,
     string memory,
-    string memory)
+    string memory,
+    bool)
   {
       require(findOrg(_custaddress,msg.sender),"User hasnt given their consent");
-      return(customers[_custaddress].custAddress,customers[_custaddress].jsonHash,customers[_custaddress].photoHash,customers[_custaddress].kycStatus,customers[_custaddress].citizenship_front_hash,customers[_custaddress].citizenship_back_hash);
+      return(customers[_custaddress].custAddress,customers[_custaddress].jsonHash,customers[_custaddress].photoHash,customers[_custaddress].citizenship_front_hash,customers[_custaddress].citizenship_back_hash,customers[_custaddress].kycStatus);
   }
   
   function viewYourKYC() public view returns(Customer memory){

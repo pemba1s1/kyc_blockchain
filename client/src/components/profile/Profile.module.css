@@ -1,73 +1,67 @@
 html{
     height: 100%;
+}
+.bground {
+  min-height: 100%;
+  background-size: auto;
+  margin: 0;
+  z-index: -1;
+  width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+}
+.container {
+  border-radius: 10px;
+  border: solid 1px;
+  width: 80%;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 2%;
+  align-content: center;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  box-shadow: 15px 25px 45px rgba(0,0,0,0.7);
+  padding-top: 20px;
+}
+
+.pic {
+  max-width: 100%;
+  border-radius: 15px;
+}
+.header {
+  float: right;
+  border: 1px solid;
+  margin-top: 13px;
+  width: 18%;
+  border-radius: 15px;
+}
+.boxes {
+  height: 5rem;
+  font-size: 1.25em;
+  backdrop-filter: blur(5px);
+  border-radius: 25px;
+}
+
+.boxes tr, .boxes td{
+  border-radius: 50px;
+  width: auto;
+  padding: 1em 1em 0.6em 2em;
+}
+
+.govt{
+  width: 100%;
+  height: 300px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+@media screen and (max-width:900px) {
+  .header{
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
   }
-  
-  *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  
-  .bground {
-    background-image: url("https://wallpaperaccess.com/full/168798.jpg");
-    min-height: 100%;
-    background-size: auto;
-    background-color: blue;
-    margin: 0;
-    z-index: -1;
-  }
-  .container {
-    border-radius: 25px;
-    border: solid 1px;
-    width: 70%;
-    font-size: 1.32em;
-    font-family: 'Poppins', sans-serif;
-    margin-left: 16%;
-    margin-top: 2%;
-    align-content: center;
-    z-index: 2;
-    backdrop-filter: blur(5px);
-    box-shadow: 15px 25px 45px rgba(0,0,0,0.7);
-    padding: 1em;
-  }
-  
-  .pic {
-    height: 130px;
-    width: 130px;
-  }
-  .header {
-    padding-left: 80%;
-    padding-top: 20px;
-  }
-  
-  .footer {
-    margin-top: auto;
+  .container{
     width: 100%;
-    height: 30px; /* Height of the footer */
-    text-align: center;
-    color: black;
-    backdrop-filter: blur(50px);
-    z-index: 3;
   }
-  
-  .boxes {
-    height: 5rem;
-    font-size: 1.25em;
-    backdrop-filter: blur(5px);
-    border-radius: 25px;
-  }
-  
-  .tr, td{
-    border-radius: 50px;
-    width: auto;
-    padding: 1em 1em 0.6em 5em;
-  }
-  
-  .govt{
-    width: 100%;
-    height: 400px;
-  }
-  
-  
+}

@@ -44,10 +44,10 @@ class Org extends Component {
       const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
       this.setState({kyc});
       let validOrg = await kyc.methods.validOrg().call({from:this.state.account});
-      let orgDetail = await kyc.methods.getYourOrgDetail().call({fromt:this.state.account})
-      this.setState({orgDetail})
       this.setState({validOrg})
       this.setState({loadingorg:false})
+      let orgDetail = await kyc.methods.getYourOrgDetail().call({fromt:this.state.account})
+      this.setState({orgDetail})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -79,8 +79,8 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    await ipfs.add(this.state.photo).then(result=>{
-      this.setState({photohash:result.cid.toV1().toString()})
+    await ipfs.add(this.state.p_photo).then(result=>{
+      this.setState({photo_hash:result.cid.toV1().toString()})
     },error=>{
       console.log(error)
     })
@@ -94,7 +94,7 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    let added =this.state.kyc.methods.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photohash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
+    let added =this.state.kyc.methods.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
     .send({from:this.state.account})
     .on('transactionHash',(hash)=>{
       this.setState({loading : false})
@@ -112,8 +112,9 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    await ipfs.add(this.state.photo).then(result=>{
-      this.setState({photohash:result.cid.toV1().toString()})
+    await ipfs.add(this.state.p_photo).then(result=>{
+      this.setState({photo_hash:result.cid.toV1().toString()})
+      console.log(this.state.photo_hash)
     },error=>{
       console.log(error)
     })
@@ -127,7 +128,7 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    let added =this.state.kyc.methods.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photohash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
+    let added =this.state.kyc.methods.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
     .send({from:this.state.account})
     .on('transactionHash',(hash)=>{
       this.setState({loading : false})
@@ -200,10 +201,10 @@ class Org extends Component {
       loadingorg:true,
       data : {},
       jsonHash : '',
-      photohash :'',
+      photo_hash :'',
       citizenship_front_hash : '',
       citizenship_back_hash:'',
-      photo : '',
+      p_photo : '',
       citizenship_front :'',
       citizenship_back: '',
       eth_address:'',

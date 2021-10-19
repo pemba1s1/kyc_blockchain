@@ -19,8 +19,8 @@ const Removeorg = (props) =>{
                 <Button variant="danger" type="submit" value="Submit" >Remove Organization</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"red"}}>
-            {props.loading && <p style={{color:'blue'}}>In Transaction...</p>}
-            {props.removed && <p>Org Removed</p>}
+            {props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
+            props.removed && <p>Org Removed</p>}
             </div>
         </Container>
         

@@ -39,10 +39,10 @@ class Customer extends Component {
       const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
       this.setState({kyc});
       let validCust = await kyc.methods.validCust().call({from:this.state.account});
-      let custDetail = await kyc.methods.viewYourKYC().call({from:this.state.account});
-      this.setState({custDetail})
       this.setState({validCust})
       this.setState({loadingcust:false})
+      let custDetail = await kyc.methods.viewYourKYC().call({from:this.state.account});
+      this.setState({custDetail})
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -70,7 +70,7 @@ class Customer extends Component {
     this.state={
       account : '',
       validCust:false,
-      loadingcust:'true',
+      loadingcust:true,
       custDetail:'',
       kyc:{}
     }

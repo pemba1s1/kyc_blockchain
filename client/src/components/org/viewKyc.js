@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import {Form , Container, Button } from "react-bootstrap"
+import Profile from "../profile";
 
 export default class Viewkyc extends Component{
     componentDidMount = () =>{
@@ -51,17 +52,16 @@ export default class Viewkyc extends Component{
 
     detail = () => {
         return(
-        <Container style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>
-            <Button onClick={()=>{
-                this.setState({value:false})
-            }}>Go Back</Button>
-            <Button variant="danger" onClick={this.deleteKyc}>Delete</Button>
-            <p>Eth Address : {this.state.cust_detail[0]}</p>
-            <p>json hash : {this.state.cust_detail[1]}</p>
-            <p>photo hash : {this.state.cust_detail[2]}</p>
-            <p>front : {this.state.cust_detail[4]}</p>
-            <p>back : {this.state.cust_detail[5]}</p>
-        </Container>
+            <>
+                <Container style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>
+                    <Button onClick={()=>{
+                        this.setState({value:false})
+                    }}>Go Back</Button>
+                    <Button variant="danger" onClick={this.deleteKyc} style={{float:"right"}}>Delete</Button>
+                </Container>
+                <Profile detail={this.state.cust_detail}/>
+            </>
+        
         )
     }
 
@@ -75,9 +75,9 @@ export default class Viewkyc extends Component{
     }
     render(){
     return(
-        <Container>
+        <>
             {this.state.value ? this.detail():this.form()}
-        </Container>
+        </>
     )
     }
 }

@@ -12,7 +12,7 @@ const Index = () =>{
             <Col style={{backgroundImage:`url(/img/kyc.jpeg)`,backgroundSize:'Cover',backgroundRepeat:'no-repeat'}}>
 
             </Col>
-            <Col sm={5} style={{backgroundImage: `url("https://wallpaperaccess.com/full/168798.jpg")`, backgroundSize:'Cover', backgroundRepeast:'no-repeat'}}>
+            <Col sm={5}>
               <Row style={{height: "60%",paddingTop:"60px"}}>
                 <Col>
                 <h1><b>KYC Blockchain</b></h1>

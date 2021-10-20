@@ -23,7 +23,6 @@ class Profile extends Component {
     const p_photo = "https://"+this.props.detail[2]+".ipfs.infura-ipfs.io/"
     const front = "https://"+this.props.detail[3]+".ipfs.infura-ipfs.io/"
     const back = "https://"+this.props.detail[4]+".ipfs.infura-ipfs.io/"
-    console.log(this.props.detail)
     return (
       <div className={classes.bground}>
         <h1>Profile</h1>

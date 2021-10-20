@@ -9,7 +9,7 @@ export default class Viewkyc extends Component{
 
     getKyc = (event) => {
         event.preventDefault()
-        this.props.kyc.methods.viewKYC(this.state.cust_address).call({from:this.props.account})
+        this.props.kyc.viewKYC(this.state.cust_address,{from:this.props.account})
             .then(res=>{
                 this.setState({cust_detail:res})
                 this.setState({value:true})
@@ -20,7 +20,7 @@ export default class Viewkyc extends Component{
     }
 
     deleteKyc = (cust) => {
-        this.props.kyc.methods.removeKYC(this.state.cust_detail[0]).send({from:this.props.account})
+        this.props.kyc1.removeKYC(this.state.cust_detail[0],{from:this.props.account})
             .then(res=>{
                 console.log(res)
             }).catch(err=>{

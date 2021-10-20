@@ -6,6 +6,7 @@ import Index from "./Index"
 import Customer from "./customer/cust_index"
 import Admin from "./admin/Admin"
 import { NotFound } from "./404";
+import Ethers from "./ethers_index";
 
 class App extends Component {
   componentDidMount(){
@@ -35,6 +36,9 @@ class App extends Component {
           </Route>
           <Route exact path='/admin/*'>
             <Admin title={"Admin"}/>
+          </Route>
+          <Route exact path='/eth/'>
+            <Ethers />
           </Route>
           <Route path="*">
             <NotFound />

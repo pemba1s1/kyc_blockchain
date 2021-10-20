@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Kyc from "../../contracts/Kyc.json";
-import Web3 from 'web3'
 import NavBar from './NavBar'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Container from "react-bootstrap/esm/Container";
@@ -12,6 +11,10 @@ import Updatekyc from "./updateKyc";
 import Deleterequest from "./deleteRequest";
 import Listrequest from "./list_request";
 import { NotFound } from "../404";
+import { ethers } from "ethers";
+
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+const signer = provider.getSigner(0)
 
 
 const {create} = require('ipfs-http-client')
@@ -31,7 +34,6 @@ class Org extends Component {
   async loadBlockchainData() {
     //Declare Web3
     const ethereum = window.ethereum
-    let web3 = new Web3(window.ethereum)
     //Load account
     window.ethereum.on('accountsChanged',this.handleAccountsChanged)
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
@@ -41,13 +43,17 @@ class Org extends Component {
     const networkData = Kyc.networks[networkId]
     //IF got connection, get data from contracts
     if(networkData){
-      const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
+      const kyc = new ethers.Contract(networkData.address,Kyc.abi,provider)
+      const kyc1 = new ethers.Contract(networkData.address,Kyc.abi,signer)
       this.setState({kyc});
-      let validOrg = await kyc.methods.validOrg().call({from:this.state.account});
-      this.setState({validOrg})
+      this.setState({kyc1});
+      await kyc.validOrg({from:this.state.account}).then(res=>{
+        this.setState({validOrg:res})
+      })
       this.setState({loadingorg:false})
-      let orgDetail = await kyc.methods.getYourOrgDetail().call({fromt:this.state.account})
-      this.setState({orgDetail})
+      kyc.getYourOrgDetail({from:this.state.account}).then(res=>{
+        this.setState({orgDetail:res})
+      })
     }else{
       window.alert('KYC contract not deployed on this network')
     }
@@ -57,7 +63,6 @@ class Org extends Component {
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
     else {
@@ -94,11 +99,10 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    let added =this.state.kyc.methods.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
-    .send({from:this.state.account})
-    .on('transactionHash',(hash)=>{
+    this.state.kyc1.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,{from:this.state.account})
+    .then((res)=>{
       this.setState({loading : false})
-      this.setState({added})
+      this.setState({added:res})
     }).catch(err=>{
       console.log(err.message)
     })
@@ -128,11 +132,10 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    let added =this.state.kyc.methods.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true)
-    .send({from:this.state.account})
-    .on('transactionHash',(hash)=>{
+    this.state.kyc1.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,{from:this.state.account})
+    .then((res)=>{
       this.setState({loading : false})
-      this.setState({added})
+      this.setState({added:res})
     }).catch(err=>{
       console.log(err.message)
     })
@@ -162,9 +165,8 @@ class Org extends Component {
   onRequest = (event) =>{
     event.preventDefault();
     this.setState({loading:true})
-    let req = this.state.kyc.methods.requestKYC(this.state.eth_address)
-    .send({from:this.state.account})
-    .on('transactionHash',(hash)=>{
+    this.state.kyc1.requestKYC(this.state.eth_address,{from:this.state.account})
+    .then((req)=>{
       this.setState({loading : false})
       this.setState({req})
       console.log(req)
@@ -176,9 +178,8 @@ class Org extends Component {
   onDeleteRequest =  (event)=>{
     event.preventDefault()
     this.setState({loading:true})
-    let del =this.state.kyc.methods.deleteRequestOrg(this.state.req_count)
-      .send({ from: this.state.account })
-      .on('transactionHash', (hash) => {
+    this.state.kyc1.deleteRequestOrg(this.state.req_count,{from:this.state.account})
+      .then((del) => {
         this.setState({
          loading:false
        })
@@ -195,6 +196,7 @@ class Org extends Component {
     this.state={
       account : '',
       kyc :{},
+      kyc1 :{},
       orgDetail : '',
       validOrg: false,
       loading:false,
@@ -239,7 +241,7 @@ class Org extends Component {
             handleJsonChange={this.handleJsonChange}/>
           </Route>
           <Route exact path="/Organization/view">
-            <Viewkyc account={this.state.account} kyc={this.state.kyc}/>
+            <Viewkyc account={this.state.account} kyc={this.state.kyc} kyc1={this.state.kyc1}/>
           </Route>
           <Route exact path="/Organization/request">
             <Requestkyc
@@ -267,6 +269,7 @@ class Org extends Component {
           <Route exact path="/Organization/list">
             <Listrequest
             kyc={this.state.kyc}
+            kyc1={this.state.kyc1}
             account={this.state.account}
             handleChange={this.handleChange}
             onDeleteRequest={this.onDeleteRequest} />

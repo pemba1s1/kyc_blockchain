@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Kyc from "../../contracts/Kyc.json";
-import Web3 from 'web3'
 import NavBar from './NavBar'
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router,Switch,Route } from "react-router-dom";
@@ -10,6 +9,10 @@ import Viewrequest from "./viewRequest";
 import Revoke from "./revoke";
 import Vieworg from "./viewOrg";
 import { NotFound } from "../404";
+import { ethers } from "ethers";
+
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+const signer = provider.getSigner(0)
 
 class Customer extends Component {
   async componentDidMount() {
@@ -25,7 +28,6 @@ class Customer extends Component {
   async loadBlockchainData() {
     //Declare Web3
     const ethereum = window.ethereum
-    let web3 = new Web3(window.ethereum)
     //Load account
     window.ethereum.on('accountsChanged',this.handleAccountsChanged)
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
@@ -36,24 +38,25 @@ class Customer extends Component {
     //IF got connection, get data from contracts
     if(networkData){
       this.setState({loadingcust:true})
-      const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
+      const kyc = new ethers.Contract(networkData.address,Kyc.abi,provider)
+      const kyc1 = new ethers.Contract(networkData.address,Kyc.abi,signer)
       this.setState({kyc});
-      let validCust = await kyc.methods.validCust().call({from:this.state.account});
-      this.setState({validCust})
+      this.setState({kyc1});
+      await kyc.validCust({from:this.state.account}).then(res=>{
+        this.setState({validCust:res})
+      })
       this.setState({loadingcust:false})
-      let custDetail = await kyc.methods.viewYourKYC().call({from:this.state.account});
-      this.setState({custDetail})
+      kyc.viewYourKYC({from:this.state.account}).then(res=>{
+        this.setState({custDetail:res})
+      })
     }else{
       window.alert('KYC contract not deployed on this network')
     }
       
 
   }
-
-
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
     else {
@@ -72,7 +75,8 @@ class Customer extends Component {
       validCust:false,
       loadingcust:true,
       custDetail:'',
-      kyc:{}
+      kyc:{},
+      kyc1:{}
     }
   }
 
@@ -93,13 +97,13 @@ class Customer extends Component {
           <Viewdetail custDetail={this.state.custDetail}/>
         </Route>
         <Route exact path="/Customer/view_request">
-          <Viewrequest account={this.state.account} kyc={this.state.kyc}/>
+          <Viewrequest account={this.state.account} kyc={this.state.kyc} kyc1={this.state.kyc1}/>
         </Route>
         <Route exact path="/Customer/revoke">
-          <Revoke  account={this.state.account} kyc={this.state.kyc}/>
+          <Revoke  account={this.state.account} kyc1={this.state.kyc1}/>
         </Route>
         <Route exact path="/Customer/view_org">
-          <Vieworg custDetail={this.state.custDetail} kyc={this.state.kyc} account={this.state.account}/>
+          <Vieworg custDetail={this.state.custDetail} kyc1={this.state.kyc1} account={this.state.account}/>
         </Route>
         <Route path="*">
           <NotFound />

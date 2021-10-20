@@ -21,7 +21,7 @@ export default class Revoke extends Component{
     revokeAccess = (event) => {
         event.preventDefault()
         this.setState({loading:true})
-        this.props.kyc.methods.revokeAccessKYC(this.state.ethAddress).send({from:this.props.account})
+        this.props.kyc1.revokeAccessKYC(this.state.ethAddress,{from:this.props.account})
             .then(res=>{
                 this.setState({revoke:true,loading:false})
             })

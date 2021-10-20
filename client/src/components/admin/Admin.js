@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Kyc from "../../contracts/Kyc.json";
-import Web3 from 'web3'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import NavBar from './NavBar'
 import Vieworg from './view_org'
@@ -9,6 +8,10 @@ import Addorg from './add_org'
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 import Container from "react-bootstrap/esm/Container";
 import { NotFound } from "../404";
+import { ethers } from "ethers";
+
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+const signer = provider.getSigner(0)
 export default class Admin extends Component {
   async componentDidMount() {
     await this.loadWeb3()
@@ -23,7 +26,6 @@ export default class Admin extends Component {
   async loadBlockchainData() {
     //Declare Web3
     const ethereum = window.ethereum
-    let web3 = new Web3(window.ethereum)
     //Load account
     window.ethereum.on('accountsChanged',this.handleAccountsChanged)
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
@@ -33,10 +35,13 @@ export default class Admin extends Component {
     const networkData = Kyc.networks[networkId]
     //IF got connection, get data from contracts
     if(networkData){
-      const kyc = new web3.eth.Contract(Kyc.abi, networkData.address)
+      const kyc = new ethers.Contract(networkData.address,Kyc.abi,provider)
+      const kyc1 = new ethers.Contract(networkData.address,Kyc.abi,signer)
+      this.setState({kyc1})
       this.setState({kyc});
-      let validAdmin = await kyc.methods.validAdmin().call({from:this.state.account});
-      this.setState({validAdmin})
+      await kyc.validAdmin({from:this.state.account}).then(res=>{
+        this.setState({validAdmin:res})
+          })
       this.setState({loadingadmin:false})
     }else{
       window.alert('KYC contract not deployed on this network')
@@ -47,7 +52,6 @@ export default class Admin extends Component {
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
     else {
@@ -63,9 +67,8 @@ export default class Admin extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({loading:true})
-    let added=this.state.kyc.methods.addOrg(this.state.orgName,this.state.ethAddress)
-    .send({from:this.state.account})
-    .on('transactionHash', (hash)=>{
+    let added=this.state.kyc1.addOrg(this.state.orgName,this.state.ethAddress,{from:this.state.account})
+    .then((hash)=>{
       this.setState({loading : false,added:added})
     }).catch(err=>{
       console.log(err.message)
@@ -83,7 +86,7 @@ export default class Admin extends Component {
 
   viewOrg = (event) => {
     event.preventDefault();
-    let orgDetail = this.state.kyc.methods.viewOrg(this.state.address).call({from:this.state.account})
+    let orgDetail = this.state.kyc.viewOrg(this.state.address,{from:this.state.account})
     orgDetail.then(result=>{
         this.setState({orgDetail:result});
       } ).catch(err=>{
@@ -95,9 +98,8 @@ export default class Admin extends Component {
   removeOrg = (event) =>{
     event.preventDefault();
     this.setState({loading:true})
-    let removed = this.state.kyc.methods.removeOrg(this.state.address)
-    .send({from:this.state.account})
-    .on('transactionHash', (hash)=>{
+    let removed = this.state.kyc1.removeOrg(this.state.address,{from:this.state.account})
+    .then((hash)=>{
       this.setState({loading : false})
       this.setState({removed})
     }).catch(err=>{
@@ -115,6 +117,7 @@ export default class Admin extends Component {
       ethAddress:'',
       account:'',
       kyc:{},
+      kyc1:{},
       address:'',
       orgDetail:'',
       added: '',

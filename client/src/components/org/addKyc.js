@@ -8,7 +8,6 @@ export default function Addkyc(props){
     })
     return(
         <Container>
-        {console.log(props)}
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Add new KYC </h2>
             <Form style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}} onSubmit={props.handleSubmit}>
                 <Form.Group>

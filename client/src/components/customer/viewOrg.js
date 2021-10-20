@@ -24,7 +24,7 @@ export default function Vieworg(props){
                             <td>{org}</td>
                             <td style={{width:"20%"}}>
                                 <Button variant="danger" onClick={()=>{
-                                    props.kyc.methods.revokeAccessKYC(org).send({from:props.account})
+                                    props.kyc1.revokeAccessKYC(org,{from:props.account})
                                         .then(res=>{
                                         })
                                         .catch(e=>{

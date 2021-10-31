@@ -99,8 +99,6 @@ class Customer extends Component {
       <NavBar account={this.state.account} />
       <Switch>
         <Route exact path="/Customer/">
-        </Route>
-        <Route exact path="/Customer/view">
           <Viewdetail error={this.state.error} errormsg={this.state.errormsg} custDetail={this.state.custDetail}/>
         </Route>
         <Route exact path="/Customer/view_request">

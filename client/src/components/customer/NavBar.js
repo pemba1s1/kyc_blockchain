@@ -13,7 +13,6 @@ export default class NavBar extends Component {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Link className="nav-link" to='/Customer/view'>View KYC</Link>
                         <Link className="nav-link" to='/Customer/view_request'>View Request</Link>
                         <Link className="nav-link" to='/Customer/revoke'>Revoke Access</Link>
                         <Link className="nav-link" to='/Customer/view_org'>View Organizations</Link>

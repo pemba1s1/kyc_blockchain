@@ -75,7 +75,6 @@ class Profile extends Component {
               </tbody>
             </table>
           </div>
-          <img src="" alt="" />
         </div>
       );
     }

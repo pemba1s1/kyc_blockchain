@@ -12,6 +12,7 @@ import Deleterequest from "./deleteRequest";
 import Listrequest from "./list_request";
 import { NotFound } from "../404";
 import { ethers } from "ethers";
+import OrgProfile from "../orgProfile";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 const signer = provider.getSigner(0)
@@ -288,6 +289,7 @@ class Org extends Component {
         <NavBar account={this.state.account} />
         <Switch>
           <Route exact path="/Organization/">
+            <OrgProfile orgDetail={this.state.orgDetail}/>
           </Route>
           <Route exact path="/Organization/add">
             <Addkyc 

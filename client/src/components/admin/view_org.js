@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const Vieworg = (props) =>{
     useEffect(() => {
         document.title='Admin | View Org Details'
-    })
+        props.cleanState()
+    },[])
     return(
         <Container>
             <Form style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}} onSubmit={props.viewOrg}>
@@ -21,10 +22,10 @@ const Vieworg = (props) =>{
                 <Button  variant="primary" type="submit" value="Submit" >Search Organization</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px"}}>
-            {props.orgDetail ? 
+            {props.error? <p style={{color:"red"}}>{props.errormsg}</p>: 
+            props.orgDetail && 
             <h3>Bank Name : {props.orgDetail.name }<br/>
-            Eth Address : {props.orgDetail.ethAddress} </h3>
-            :<p></p>}
+            Eth Address : {props.orgDetail.ethAddress} </h3>}
             </div>
         </Container>
     );

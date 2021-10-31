@@ -7,7 +7,8 @@ export default function Viewdetail(props){
     })
     return(
         <>
-            <Profile detail={props.custDetail}/>
+        {props.error? <p>{props.errormsg}</p>:<Profile detail={props.custDetail}/>}
+            
         </>
     )
 }

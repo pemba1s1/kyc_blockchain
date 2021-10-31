@@ -67,11 +67,25 @@ export default class Admin extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({loading:true})
+    this.setState({error:false})
     let added=this.state.kyc1.addOrg(this.state.orgName,this.state.ethAddress,{from:this.state.account})
     .then((hash)=>{
       this.setState({loading : false,added:added})
     }).catch(err=>{
-      console.log(err.message)
+      this.setState({loading:false})
+      if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+        this.setState({
+          error:true,
+          errormsg:err.message
+        })
+      }
+      else{
+        this.setState({
+          error:true,
+          errormsg:"Organization already exists"
+        })
+      }
+      
     })
   }
 
@@ -86,11 +100,16 @@ export default class Admin extends Component {
 
   viewOrg = (event) => {
     event.preventDefault();
+    this.setState({error:false})
     let orgDetail = this.state.kyc.viewOrg(this.state.address,{from:this.state.account})
     orgDetail.then(result=>{
-        this.setState({orgDetail:result});
+        this.setState({loading:false,orgDetail:result});
       } ).catch(err=>{
-        console.log(err.message)
+        this.setState({
+          orgDetail:'',
+          error:true,
+          errormsg:"This particular organization doesnt exist.Input correct address"
+        })
       })
       
   }
@@ -98,16 +117,31 @@ export default class Admin extends Component {
   removeOrg = (event) =>{
     event.preventDefault();
     this.setState({loading:true})
+    this.setState({error:false})
     let removed = this.state.kyc1.removeOrg(this.state.address,{from:this.state.account})
     .then((hash)=>{
       this.setState({loading : false})
       this.setState({removed})
     }).catch(err=>{
-      console.log(err.message)
+      this.setState({
+        loading:false,
+        error:true,
+        errormsg:"This particular organization doesnt exist.Input correct address"
+      })
     })
   }
 
-  
+  cleanState = () => {
+    this.setState({
+      error:false,
+      errormsg:"",
+      loading:false,
+      removed:"",
+      added:"",
+      orgDetail:"",
+      address:''
+    })
+  }
  
   constructor(props){
     super(props);
@@ -123,7 +157,9 @@ export default class Admin extends Component {
       added: '',
       removed:'',
       loading:'',
-      loadingadmin:'true'
+      loadingadmin:'true',
+      error:false,
+      errormsg:''
     }
   }
 
@@ -140,13 +176,37 @@ export default class Admin extends Component {
         <Route exact path="/admin/">
         </Route>
         <Route exact path="/admin/add">
-          <Addorg loading={this.state.loading} added={this.state.added} orgName={this.state.orgName} ethAddress={this.state.ethAddress} handleSubmit={this.handleSubmit} handleChange={this.handleChange} />
+          <Addorg 
+          cleanState={this.cleanState} 
+          error={this.state.error} 
+          errormsg={this.state.errormsg} 
+          loading={this.state.loading} 
+          added={this.state.added} 
+          orgName={this.state.orgName} 
+          ethAddress={this.state.ethAddress} 
+          handleSubmit={this.handleSubmit} 
+          handleChange={this.handleChange} />
         </Route>
         <Route exact path='/admin/view'>
-          <Vieworg orgDetail={this.state.orgDetail} address={this.state.address} viewOrg={this.viewOrg} handleChange={this.handleChange}/>
+          <Vieworg 
+          cleanState={this.cleanState} 
+          error={this.state.error} 
+          errormsg={this.state.errormsg} 
+          orgDetail={this.state.orgDetail} 
+          address={this.state.address} 
+          viewOrg={this.viewOrg} 
+          handleChange={this.handleChange}/>
         </Route>
         <Route exact path="/admin/remove">
-          <Removeorg loading={this.state.loading} removed={this.state.removed} address={this.state.address} removeOrg={this.removeOrg} handleChange={this.handleChange}/>
+          <Removeorg 
+          cleanState={this.cleanState} 
+          error={this.state.error} 
+          errormsg={this.state.errormsg} 
+          loading={this.state.loading} 
+          removed={this.state.removed} 
+          address={this.state.address} 
+          removeOrg={this.removeOrg} 
+          handleChange={this.handleChange}/>
         </Route>
         <Route path="*">
           <NotFound />

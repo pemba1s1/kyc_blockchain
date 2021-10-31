@@ -13,9 +13,21 @@ export default class Viewkyc extends Component{
             .then(res=>{
                 this.setState({cust_detail:res})
                 this.setState({value:true})
+                this.setState({error:false})
                 console.log(res)
             }).catch(err=>{
-                console.log(err)
+                if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+                    this.setState({
+                      error:true,
+                      errormsg:err.message
+                    })
+                }
+                else{
+                this.setState({
+                    error:true,
+                    errormsg:err.data.message
+                })
+                }
             })
     }
 
@@ -45,6 +57,7 @@ export default class Viewkyc extends Component{
                 </Form.Group>
                 <br/>
                 <Button variant="primary" type="submit" value="Submit" >Submit</Button>
+                {this.state.error && <p style={{color:'red'}}>{this.state.errormsg}</p>}
             </Form>
         </Container>
         )
@@ -70,13 +83,15 @@ export default class Viewkyc extends Component{
         this.state={
             cust_address : '',
             cust_detail : {},
-            value : false
+            value : false,
+            error:false,
+            errormsg:''
         }
     }
     render(){
     return(
         <>
-            {this.state.value ? this.detail():this.form()}
+            {this.state.value? this.detail():this.form()}
         </>
     )
     }

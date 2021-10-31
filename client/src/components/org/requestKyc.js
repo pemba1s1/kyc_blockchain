@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 export default function Requestkyc(props){
     useEffect(() => {
         document.title='Request KYC'
-    })
+        props.cleanState()
+    },[])
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Request Customer KYC </h2>
@@ -19,8 +20,8 @@ export default function Requestkyc(props){
                 <Button variant="primary" type="submit" value="Submit" >Request</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-                {props.loading && <p style={{color:'blue'}}>Requesting Customer KYC...</p>}
-                {props.req && <p>Customer KYC Requested</p>}
+                {props.loading ? <p style={{color:'blue'}}>Requesting Customer KYC...</p>: 
+                props.error? <p style={{color:"red"}}>{props.errormsg}</p>:props.req && <p>Customer KYC Requested</p>}
             </div>
         </Container>
     )

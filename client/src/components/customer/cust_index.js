@@ -46,8 +46,13 @@ class Customer extends Component {
         this.setState({validCust:res})
       })
       this.setState({loadingcust:false})
-      kyc.viewYourKYC({from:this.state.account}).then(res=>{
+      await kyc.viewYourKYC({from:this.state.account}).then(res=>{
         this.setState({custDetail:res})
+      }).catch(err=>{
+        this.setState({
+          error:true,
+          errormsg:"Failed to load your data. Try refreshing the page"
+        })
       })
     }else{
       window.alert('KYC contract not deployed on this network')
@@ -76,7 +81,9 @@ class Customer extends Component {
       loadingcust:true,
       custDetail:'',
       kyc:{},
-      kyc1:{}
+      kyc1:{},
+      error:false,
+      errormsg:''
     }
   }
 
@@ -94,7 +101,7 @@ class Customer extends Component {
         <Route exact path="/Customer/">
         </Route>
         <Route exact path="/Customer/view">
-          <Viewdetail custDetail={this.state.custDetail}/>
+          <Viewdetail error={this.state.error} errormsg={this.state.errormsg} custDetail={this.state.custDetail}/>
         </Route>
         <Route exact path="/Customer/view_request">
           <Viewrequest account={this.state.account} kyc={this.state.kyc} kyc1={this.state.kyc1}/>

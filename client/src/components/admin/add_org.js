@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 export default function Addorg (props){
   useEffect(() => {
     document.title='Admin | Add Org'
-})
+    props.cleanState()
+},[])
     return(
       <Container>
       <Form onSubmit={props.handleSubmit} style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}}>
@@ -23,7 +24,8 @@ export default function Addorg (props){
           <Button variant="primary" type="submit" value="Submit" >Submit</Button>
       </Form>
       <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-            {props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
+            {props.error? <p style={{color:"red"}}>{props.errormsg}</p> :
+            props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
             props.added && <p>Org Added</p>}
         </div>
   </Container>

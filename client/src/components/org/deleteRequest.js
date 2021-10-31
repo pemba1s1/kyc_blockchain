@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 export default function Deleterequest(props){
     useEffect(() => {
         document.title='Delete Request'
-    })
+        props.cleanState()
+    },[])
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Request Customer KYC </h2>
@@ -19,8 +20,8 @@ export default function Deleterequest(props){
                 <Button variant="danger" type="submit" value="Submit" >Delete</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-                {props.loading && <p style={{color:'blue'}}>Deleting KYC Request...</p>}
-                {props.del && <p>Customer KYC Request Deleted</p>}
+                {props.loading ? <p style={{color:'blue'}}>Deleting KYC Request...</p>:
+                props.error? <p style={{color:"red"}}>{props.errormsg}</p>: props.del && <p>Customer KYC Request Deleted</p>}
             </div>
         </Container>
     )

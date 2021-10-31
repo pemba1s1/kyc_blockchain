@@ -5,7 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 export default function Updatekyc(props){
     useEffect(() => {
         document.title='Update KYC'
-    })
+        props.cleanState()
+    },[])
     return(
         <Container>
         <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Update new KYC </h2>
@@ -70,7 +71,7 @@ export default function Updatekyc(props){
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
                 {props.loading ? <p style={{color:'blue'}}>Updating Customer KYC...</p> :
-                props.added && <p>Customer KYC Updated</p>}
+                props.error? <p style={{color:"red"}}>{props.errormsg}</p>:props.added && <p>Customer KYC Updated</p>}
             </div>
         </Container>
     )

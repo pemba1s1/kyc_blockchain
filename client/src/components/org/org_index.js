@@ -104,7 +104,19 @@ class Org extends Component {
       this.setState({loading : false})
       this.setState({added:res})
     }).catch(err=>{
-      console.log(err.message)
+      this.setState({loading : false})
+      if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+        this.setState({
+          error:true,
+          errormsg:err.message
+        })
+      }
+      else{
+        this.setState({
+          error:true,
+          errormsg:err.data.message
+        })
+      }
     })
   }
 
@@ -137,7 +149,19 @@ class Org extends Component {
       this.setState({loading : false})
       this.setState({added:res})
     }).catch(err=>{
-      console.log(err.message)
+      this.setState({loading : false})
+      if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+        this.setState({
+          error:true,
+          errormsg:err.message
+        })
+      }
+      else{
+        this.setState({
+          error:true,
+          errormsg:err.data.message
+        })
+      }
     })
   }
 
@@ -171,7 +195,21 @@ class Org extends Component {
       this.setState({req})
       console.log(req)
     }).catch(err=>{
-      console.log(err.message)
+      this.setState({
+        loading:false
+      })
+      if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+        this.setState({
+          error:true,
+          errormsg:err.message
+        })
+      }
+      else{
+        this.setState({
+          error:true,
+          errormsg:err.data.message
+        })
+      }
     })
   }
 
@@ -184,12 +222,30 @@ class Org extends Component {
          loading:false
        })
         this.setState({del})
-      }).catch(error=>{
-        console.log(error.message)
+      }).catch(err=>{
+        this.setState({loading : false})
+        if(err.message==="MetaMask Tx Signature: User denied transaction signature."){
+          this.setState({
+            error:true,
+            errormsg:err.message
+          })
+        }
+        else{
+          this.setState({
+            error:true,
+            errormsg:"Request doesnt exist"
+          })
+        }
       })
   }
 
-
+  cleanState = () => {
+    this.setState({
+      error:false,
+      errormsg:"",
+      loading:false,
+    })
+  }
 
   constructor(props){
     super(props);
@@ -214,7 +270,9 @@ class Org extends Component {
       req:'',
       req_count:'',
       del:'',
-      custDetail:''
+      custDetail:'',
+      error:false,
+      errormsg:''
     }
   }
 
@@ -233,6 +291,9 @@ class Org extends Component {
           </Route>
           <Route exact path="/Organization/add">
             <Addkyc 
+            cleanState={this.cleanState}
+            error={this.state.error} 
+            errormsg={this.state.errormsg}
             added={this.state.added}
             loading={this.state.loading}
             captureFile={this.captureFile}
@@ -241,10 +302,16 @@ class Org extends Component {
             handleJsonChange={this.handleJsonChange}/>
           </Route>
           <Route exact path="/Organization/view">
-            <Viewkyc account={this.state.account} kyc={this.state.kyc} kyc1={this.state.kyc1}/>
+            <Viewkyc 
+            account={this.state.account} 
+            kyc={this.state.kyc} 
+            kyc1={this.state.kyc1}/>
           </Route>
           <Route exact path="/Organization/request">
             <Requestkyc
+            cleanState={this.cleanState}
+            error={this.state.error} 
+            errormsg={this.state.errormsg}
             req={this.state.req}
             loading={this.state.loading}
             onRequest={this.onRequest}
@@ -252,6 +319,9 @@ class Org extends Component {
           </Route>
           <Route exact path="/Organization/update/">
             <Updatekyc
+            cleanState={this.cleanState}
+            error={this.state.error} 
+            errormsg={this.state.errormsg}
             added={this.state.added}
             loading={this.state.loading}
             captureFile={this.captureFile}
@@ -261,6 +331,9 @@ class Org extends Component {
           </Route>
           <Route exact path="/Organization/delete">
             <Deleterequest
+            cleanState={this.cleanState}
+            error={this.state.error} 
+            errormsg={this.state.errormsg}
             del={this.state.del}
             loading={this.state.loading}
             onDeleteRequest={this.onDeleteRequest}

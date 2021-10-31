@@ -7,7 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const Removeorg = (props) =>{
     useEffect(() => {
         document.title='Admin | Remove Org'
-    })
+        props.cleanState()
+    },[])
     return(
         <Container>
             <Form style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}} onSubmit={props.removeOrg}>
@@ -19,7 +20,8 @@ const Removeorg = (props) =>{
                 <Button variant="danger" type="submit" value="Submit" >Remove Organization</Button>
             </Form>
             <div style={{margin:"auto",width:"80%",padding:"10px",color:"red"}}>
-            {props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
+            {props.error ? <p style={{color:"red"}}>{props.errormsg}</p> : 
+            props.loading ? <p style={{color:'blue'}}>In Transaction...</p>:
             props.removed && <p>Org Removed</p>}
             </div>
         </Container>

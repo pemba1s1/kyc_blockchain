@@ -10,7 +10,9 @@ export default class Revoke extends Component{
         this.state={
             revoke:false,
             ethAddress:'',
-            loading:''
+            loading:'',
+            error:false,
+            errormsg:''
         }
     }
 
@@ -26,7 +28,11 @@ export default class Revoke extends Component{
                 this.setState({revoke:true,loading:false})
             })
             .catch(e=>{
-                console.log(e)
+                this.setState({
+                    loading:false,
+                    error:true,
+                    errormsg:"This particular organization has no access to your data"
+                })
             })
     }
 
@@ -44,8 +50,8 @@ export default class Revoke extends Component{
                     <Button  variant="primary" type="submit" value="Submit" >Revoke Organization</Button>
                 </Form>
                 <div style={{margin:"auto",width:"80%",padding:"10px",color:"green"}}>
-                {this.state.loading && <p style={{color:'blue'}}>Revoking Access</p>}
-                {this.state.revoke && <p>Revoked</p>}
+                {this.state.loading ? <p style={{color:'blue'}}>Revoking Access</p>:
+                this.state.error? <p style={{color:"red"}}>{this.state.errormsg}</p>:this.state.revoke && <p>Revoked</p>}
                 </div>
             </Container>
         )

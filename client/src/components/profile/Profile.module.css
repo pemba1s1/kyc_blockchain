@@ -10,6 +10,7 @@ html{
   margin-right: auto;
   margin-left: auto;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 .container {
   border-radius: 10px;
@@ -69,5 +70,13 @@ html{
   }
   .container{
     width: 100%;
+  }
+}
+@media screen and (max-width:600px) {
+  .boxes{
+    font-size: 15px;
+  }
+  .bground{
+    width: 95%;
   }
 }

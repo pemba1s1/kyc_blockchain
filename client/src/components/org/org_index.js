@@ -13,6 +13,7 @@ import Listrequest from "./list_request";
 import { NotFound } from "../404";
 import { ethers } from "ethers";
 import OrgProfile from "../orgProfile";
+import { getKey,encrypt, decrypt } from "../../rsa/Rsa";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 const signer = provider.getSigner(0)
@@ -25,6 +26,10 @@ class Org extends Component {
   async componentDidMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
+    
+    let key = await getKey()
+    this.setState({key})
+    console.log(this.state.key)
     document.title = this.props.title
   }
   async componentWillUnmount(){
@@ -80,13 +85,16 @@ class Org extends Component {
   handleSubmit = async(event) => {
     event.preventDefault()
     this.setState({loading:true})
-    await ipfs.add(JSON.stringify(this.state.data)).then(result=>{
+    let s = await encrypt(JSON.stringify(this.state.data),this.state.key[0],this.state.key[2])
+    await ipfs.add(s).then(result=>{
       this.setState({jsonHash:result.cid.toV1().toString()})
-    },error=>{
+      console.log(this.state.jsonHash)
+    },error=>{  
       console.log(error)
     })
     await ipfs.add(this.state.p_photo).then(result=>{
       this.setState({photo_hash:result.cid.toV1().toString()})
+      console.log(this.state.photo_hash)
     },error=>{
       console.log(error)
     })
@@ -100,7 +108,7 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    this.state.kyc1.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,{from:this.state.account})
+    this.state.kyc1.registerKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,this.state.key[1],this.state.key[2],{from:this.state.account})
     .then((res)=>{
       this.setState({loading : false})
       this.setState({added:res})
@@ -124,7 +132,8 @@ class Org extends Component {
   updateKyc = async (event) =>{
     event.preventDefault()
     this.setState({loading:true})
-    await ipfs.add(JSON.stringify(this.state.data)).then(result=>{
+    let s = await encrypt(JSON.stringify(this.state.data),this.state.key[0],this.state.key[2])
+    await ipfs.add(s).then(result=>{
       this.setState({jsonHash:result.cid.toV1().toString()})
     },error=>{
       console.log(error)
@@ -145,7 +154,7 @@ class Org extends Component {
     },error=>{
       console.log(error)
     })
-    this.state.kyc1.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,{from:this.state.account})
+    this.state.kyc1.updateKYC(this.state.eth_address,this.state.jsonHash,this.state.photo_hash,this.state.citizenship_front_hash,this.state.citizenship_back_hash,true,this.state.key[1],this.state.key[2],{from:this.state.account})
     .then((res)=>{
       this.setState({loading : false})
       this.setState({added:res})
@@ -184,7 +193,15 @@ class Org extends Component {
   captureFile = (event) => {
     const name = event.target.name
     const file = event.target.files[0]
-    this.setState({[name]:file})
+    let fr = new FileReader();
+    fr.onload = function(e) {
+      let textread = e.target.result;
+      let enc = encrypt(textread,this.state.key[0],this.state.key[2])
+      console.log(textread)
+      this.setState({[name]:enc})
+      console.log(this.state.p_photo)
+    }.bind(this)
+    fr.readAsDataURL(file);
   }
 
   onRequest = (event) =>{

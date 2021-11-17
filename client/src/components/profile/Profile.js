@@ -1,13 +1,40 @@
 import React, { Component } from "react";
 import classes from "./Profile.module.css";
 import axios from "axios"
+import { decrypt } from "../../rsa/Rsa";
 
 class Profile extends Component {
 
   componentDidMount = () =>{
+    console.log(this.props.detail)
+    let d = Number(this.props.detail[5])
+    let n = Number(this.props.detail[6])
+    console.log(d,n)
     axios.get(`https://${this.props.detail[1]}.ipfs.infura-ipfs.io/`)
       .then(res=>{
-        this.setState({data:res.data})
+        let de =  decrypt(res.data,d,n)
+        this.setState({data:JSON.parse(de)})
+      },err=>{
+        console.log(err)
+      })
+    axios.get(`https://${this.props.detail[2]}.ipfs.infura-ipfs.io/`)
+      .then(res=>{
+        let de =  decrypt(res.data,d,n)
+        this.setState({p_photo:de})
+      },err=>{
+        console.log(err)
+      })
+    axios.get(`https://${this.props.detail[3]}.ipfs.infura-ipfs.io/`)
+      .then(res=>{
+        let de =  decrypt(res.data,d,n)
+        this.setState({front:de})
+      },err=>{
+        console.log(err)
+      })
+    axios.get(`https://${this.props.detail[4]}.ipfs.infura-ipfs.io/`)
+      .then(res=>{
+        let de =  decrypt(res.data,d,n)
+        this.setState({back:de})
       },err=>{
         console.log(err)
       })
@@ -17,17 +44,17 @@ class Profile extends Component {
     super(props);
     this.state={
       data :{},
+      p_photo:"",
+      front:"",
+      back:""
     }
   }
   render(){
-    const p_photo = "https://"+this.props.detail[2]+".ipfs.infura-ipfs.io/"
-    const front = "https://"+this.props.detail[3]+".ipfs.infura-ipfs.io/"
-    const back = "https://"+this.props.detail[4]+".ipfs.infura-ipfs.io/"
     return (
       <div className={classes.bground}>
         <h1>Profile</h1>
           <div className={classes.header}>
-            <img src={p_photo} className={classes.pic} alt='prop'/>
+            <img src={this.state.p_photo} className={classes.pic} alt='prop'/>
           </div>
           <div  className={classes.container}>
             <table  className={classes.boxes}>
@@ -66,11 +93,11 @@ class Profile extends Component {
                 </tr>
                 <tr>
                   <td>Govt. issued docs</td>
-                  <td><img className={classes.govt} src={front} alt='front' /> </td>
+                  <td><img className={classes.govt} src={this.state.front} alt='front' /> </td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td><img className={classes.govt} src={back} alt='back' /> </td>
+                  <td><img className={classes.govt} src={this.state.back} alt='back' /> </td>
                 </tr>
               </tbody>
             </table>

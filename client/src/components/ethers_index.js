@@ -1,57 +1,62 @@
 import React,{Component} from 'react'
-import Kyc from "../contracts/Kyc.json";
 import { ethers } from "ethers";
-
+import { getKey,encrypt,decrypt } from '../rsa/Rsa';
+import axios from 'axios';
 const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+const {create} = require('ipfs-http-client')
 export default class Ethers extends Component {
 
     async componentDidMount() {
-        await this.loadWeb3()
-        await this.deploy()
-        console.log(this.state.kyc)
+
+        
+const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
+    let key = await getKey();
+       axios.get('https://bafybeibehatm4tvgt3rd2usbthpmvwe2veewwermqtinkcn64censn4ljy.ipfs.infura-ipfs.io/').then(res=>{
+           console.log(res.data)
+           let d = decrypt(res.data,key[1],key[2])
+           console.log(d)
+           this.setState({img:d})
+       }).catch(err=>{
+           console.log(err)
+       })
+       axios.get('https://bafybeigbqwrv6ueloezfbbl4unp2mysowl63tfplxrdu45x45izzq4brza.ipfs.infura-ipfs.io/').then(res=>{
+           console.log(res.data)
+           let d = decrypt(res.data,key[1],key[2])
+           console.log(d)
+           this.setState({img1:d})
+       }).catch(err=>{
+           console.log(err)
+       })
+       axios.get('https://bafybeibg66hbkjzh5etk3gj2osummhrvr6utemcpatsehmsmy54p6m7hta.ipfs.infura-ipfs.io/').then(res=>{
+           console.log(res.data)
+           let d = decrypt(res.data,key[1],key[2])
+           console.log(d)
+           this.setState({img2:d})
+       }).catch(err=>{
+           console.log(err)
+       })
+
     }
 
-    async loadWeb3() {
-        if (window.ethereum) {
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-        }
-        else {
-          window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-        }
-      }
 
-    deploy = async() => {
-        const ethereum = window.ethereum
-        //Load account
-        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-        this.setState({account : accounts[0]})
-        //Network ID
-        const networkId = await ethereum.request({ method: 'net_version' })
-        const networkData = Kyc.networks[networkId]
-        //IF got connection, get data from contracts
-        if(networkData){
-          const kyc = new ethers.Contract(networkData.address,Kyc.abi,provider)
-          this.setState({kyc});
-          let valid=kyc.validAdmin({from:this.state.account}).then(res=>{
-              console.log(res)
-          })
-          console.log(valid)
-        }else{
-          window.alert('KYC contract not deployed on this network')
-        }
-    };
-
+   
     constructor(props){
         super(props);
         this.state={
-            account:'',
-            kyc:{}
+          key:"",
+          c:"",
+          img:"",
+          img1:"",
+          img2:""
         }
     }
     render(){
         return(
             <div>
-                hello
+                <img src={this.state.img}></img>
+                <img src={this.state.img1}></img>
+                <img src={this.state.img2}></img>
             </div>
         )
     }

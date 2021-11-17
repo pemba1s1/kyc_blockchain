@@ -9,6 +9,8 @@ contract Kyc {
       string photoHash;
       string citizenship_front_hash;
       string citizenship_back_hash;
+      uint d;
+      uint n;
       address[] organization;
       bool kycStatus;
   }
@@ -171,7 +173,9 @@ contract Kyc {
     string memory _photohash,
     string memory _citizenship_front_hash,
     string memory _citizenship_back_hash,
-    bool _kycStatus) internal {
+    bool _kycStatus,
+    uint _d,
+    uint _n) internal {
       require(bytes(_jsonHash).length > 0);
       require(bytes(_photohash).length > 0);
       require(bytes(_citizenship_back_hash).length > 0);
@@ -182,6 +186,8 @@ contract Kyc {
       customers[_custaddress].citizenship_front_hash=_citizenship_front_hash;
       customers[_custaddress].citizenship_back_hash=_citizenship_back_hash;
       customers[_custaddress].kycStatus=_kycStatus;
+      customers[_custaddress].d=_d;
+      customers[_custaddress].n=_n;
       kycrequestsbycust[_custaddress].custAddress=_custaddress;
   }
 
@@ -192,9 +198,11 @@ contract Kyc {
     string memory _photohash,
     string memory _citizenship_front_hash,
     string memory _citizenship_back_hash,
-    bool _kycStatus) public isOrgValid returns(bool){
+    bool _kycStatus,
+    uint _d,
+    uint _n) public isOrgValid returns(bool){
       require(customers[_custaddress].custAddress!=_custaddress,"User already exists");
-      writeKYC(_custaddress,_jsonHash,_photohash,_citizenship_front_hash,_citizenship_back_hash,_kycStatus);
+      writeKYC(_custaddress,_jsonHash,_photohash,_citizenship_front_hash,_citizenship_back_hash,_kycStatus,_d,_n);
       requestKYC(_custaddress);
       emit customerAdded(_custaddress,_kycStatus);
       return true;
@@ -203,15 +211,16 @@ contract Kyc {
 //View User KYC by Authorized Orgs  
   function viewKYC(address _custaddress) public view 
   returns(
-    address,
+    bool,
     string memory,
     string memory,
     string memory,
     string memory,
-    bool)
+    uint,
+    uint)
   {
       require(findOrg(_custaddress,msg.sender),"User hasnt given their consent");
-      return(customers[_custaddress].custAddress,customers[_custaddress].jsonHash,customers[_custaddress].photoHash,customers[_custaddress].citizenship_front_hash,customers[_custaddress].citizenship_back_hash,customers[_custaddress].kycStatus);
+      return(customers[_custaddress].kycStatus,customers[_custaddress].jsonHash,customers[_custaddress].photoHash,customers[_custaddress].citizenship_front_hash,customers[_custaddress].citizenship_back_hash,customers[_custaddress].d,customers[_custaddress].n);
   }
   
   function viewYourKYC() public view returns(Customer memory){
@@ -238,10 +247,12 @@ contract Kyc {
     string memory _photohash,
     string memory _citizenship_front_hash,
     string memory _citizenship_back_hash,
-    bool _kycStatus) public isOrgValid returns(bool){
+    bool _kycStatus,
+    uint _d,
+    uint _n) public isOrgValid returns(bool){
       require(customers[_custaddress].custAddress==_custaddress,"User doesn't exist");
       require(findOrg(_custaddress,msg.sender),"You dont have access to this user");
-      writeKYC(_custaddress,_jsonHash,_photohash,_citizenship_front_hash,_citizenship_back_hash,_kycStatus);
+      writeKYC(_custaddress,_jsonHash,_photohash,_citizenship_front_hash,_citizenship_back_hash,_kycStatus,_d,_n);
       emit customerUpdated(_custaddress,_kycStatus);
       return true;
   }

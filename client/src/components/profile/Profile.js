@@ -8,6 +8,7 @@ class Profile extends Component {
   componentDidMount = () =>{
     let d = Number(this.props.detail[5])
     let n = Number(this.props.detail[6])
+    console.log(d,n)
     axios.get(`https://${this.props.detail[1]}.ipfs.infura-ipfs.io/`)
       .then(res=>{
         let de =  decrypt(res.data,d,n)

@@ -1,3 +1,6 @@
+import { getRandPrime } from "./Prime"
+
+
 function maxint() {
   // eslint-disable-next-line
     let bits = 1
@@ -45,8 +48,9 @@ const gcd = (a, b) => {
 }
 
 export const getKey = () => {
-    let p = 907
-    let q = 773
+    let randPrime = getRandPrime(700,1500);
+    let p = randPrime[0]
+    let q = randPrime[1]
     let n = p*q
     let e = 2
     let k = 1

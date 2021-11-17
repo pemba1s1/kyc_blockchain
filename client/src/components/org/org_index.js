@@ -29,7 +29,6 @@ class Org extends Component {
     
     let key = await getKey()
     this.setState({key})
-    console.log(this.state.key)
     document.title = this.props.title
   }
   async componentWillUnmount(){
@@ -88,13 +87,11 @@ class Org extends Component {
     let s = await encrypt(JSON.stringify(this.state.data),this.state.key[0],this.state.key[2])
     await ipfs.add(s).then(result=>{
       this.setState({jsonHash:result.cid.toV1().toString()})
-      console.log(this.state.jsonHash)
     },error=>{  
       console.log(error)
     })
     await ipfs.add(this.state.p_photo).then(result=>{
       this.setState({photo_hash:result.cid.toV1().toString()})
-      console.log(this.state.photo_hash)
     },error=>{
       console.log(error)
     })
@@ -140,7 +137,6 @@ class Org extends Component {
     })
     await ipfs.add(this.state.p_photo).then(result=>{
       this.setState({photo_hash:result.cid.toV1().toString()})
-      console.log(this.state.photo_hash)
     },error=>{
       console.log(error)
     })
@@ -197,9 +193,7 @@ class Org extends Component {
     fr.onload = function(e) {
       let textread = e.target.result;
       let enc = encrypt(textread,this.state.key[0],this.state.key[2])
-      console.log(textread)
       this.setState({[name]:enc})
-      console.log(this.state.p_photo)
     }.bind(this)
     fr.readAsDataURL(file);
   }

@@ -8,6 +8,7 @@ export default function Addorg (props){
   useEffect(() => {
     document.title='Admin | Add Org'
     props.cleanState()
+    // eslint-disable-next-line
 },[])
     return(
       <Container>

@@ -7,6 +7,7 @@ export default function Deleterequest(props){
     useEffect(() => {
         document.title='Delete Request'
         props.cleanState()
+        // eslint-disable-next-line
     },[])
     return(
         <Container>

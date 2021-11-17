@@ -13,7 +13,7 @@ import Listrequest from "./list_request";
 import { NotFound } from "../404";
 import { ethers } from "ethers";
 import OrgProfile from "../orgProfile";
-import { getKey,encrypt, decrypt } from "../../rsa/Rsa";
+import { getKey,encrypt } from "../../rsa/Rsa";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 const signer = provider.getSigner(0)
@@ -262,6 +262,7 @@ class Org extends Component {
       error:false,
       errormsg:"",
       loading:false,
+      req:""
     })
   }
 

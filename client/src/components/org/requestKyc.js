@@ -7,6 +7,7 @@ export default function Requestkyc(props){
     useEffect(() => {
         document.title='Request KYC'
         props.cleanState()
+        // eslint-disable-next-line
     },[])
     return(
         <Container>

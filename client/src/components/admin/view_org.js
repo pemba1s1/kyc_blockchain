@@ -9,6 +9,7 @@ const Vieworg = (props) =>{
     useEffect(() => {
         document.title='Admin | View Org Details'
         props.cleanState()
+        // eslint-disable-next-line
     },[])
 
     return(

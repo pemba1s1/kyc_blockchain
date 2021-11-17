@@ -24,7 +24,6 @@ export default class Viewrequest extends Component{
     onChange =async(event,req_count,address,isAllowed) => {
         event.preventDefault();
         this.props.kyc1.giveAccessKYC(req_count,address,isAllowed,{from:this.props.account})
-        console.log(req_count,address,isAllowed)
     }
     constructor(props) {
         super(props);

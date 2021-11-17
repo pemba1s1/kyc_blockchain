@@ -227,6 +227,12 @@ contract Kyc {
       require(validCust(),'Customer not valid');
       return customers[msg.sender];
   }
+
+  function viewOrgWithAccess() public view returns(address[] memory){
+      require(customers[msg.sender].custAddress==msg.sender,"You dont have authority");
+      return customers[msg.sender].organization;
+  }
+  
   
   function viewRequestCust() public view returns(kycRequestList[] memory){
       require(validCust(),'Customer not valid');

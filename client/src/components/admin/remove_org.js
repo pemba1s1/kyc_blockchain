@@ -8,6 +8,7 @@ const Removeorg = (props) =>{
     useEffect(() => {
         document.title='Admin | Remove Org'
         props.cleanState()
+        // eslint-disable-next-line
     },[])
     return(
         <Container>

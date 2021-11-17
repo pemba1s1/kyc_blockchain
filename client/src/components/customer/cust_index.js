@@ -108,7 +108,7 @@ class Customer extends Component {
           <Revoke  account={this.state.account} kyc1={this.state.kyc1}/>
         </Route>
         <Route exact path="/Customer/view_org">
-          <Vieworg custDetail={this.state.custDetail} kyc1={this.state.kyc1} account={this.state.account}/>
+          <Vieworg kyc={this.state.kyc} kyc1={this.state.kyc1} account={this.state.account}/>
         </Route>
         <Route path="*">
           <NotFound />

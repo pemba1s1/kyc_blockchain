@@ -1,4 +1,5 @@
 function maxint() {
+  // eslint-disable-next-line
     let bits = 1
     let prev = 0
     let sumM1 = 1
@@ -25,7 +26,7 @@ const PowerMod = (x, p, N)=>
     while (m > 0) {
     let k = Math.floor(m / 2)
     let r = m - 2 * k
-    if (r == 1)
+    if (r === 1)
         A = (A * t) % N
     t = (t * t) % N
     m = k
@@ -52,7 +53,7 @@ export const getKey = () => {
     let phi = (p-1)*(q-1)
     let d
     while (e < phi) {
-        if (gcd(phi, e) == 1) {
+        if (gcd(phi, e) === 1) {
           break;
         } else {
           e++;
@@ -102,7 +103,7 @@ export const encrypt = (s,e,n) => {
 	  m = M.substr(i, 3 * blocksize)
 	  // remove leading 0 if necessary so JavaScript doesn't get confused
 	  // when it tries to understand the number
-	  while (m.substr(0, 1) == "0")
+	  while (m.substr(0, 1) === "0")
 	    m = m.substr(1, m.length - 1)
 	  i += 1 + parseInt(3 * blocksize)
 	  c += PowerMod(parseInt(m), e, n) + " "
@@ -111,13 +112,15 @@ export const encrypt = (s,e,n) => {
 }
 
 export const decrypt = (c,d,n) => {
-    while (c[c.length - 1] == " ")
+    while (c[c.length - 1] === " ")
         c = c.substring(0, c.length - 1)
 
     let t = ""
     let i
     let re = /\s+/
-    let codeList = new Array
+
+    // eslint-disable-next-line
+    let codeList = new Array()
     codeList = c.split(re)
 
     for (i = 0; i < codeList.length; i++)
@@ -132,7 +135,7 @@ export const decrypt = (c,d,n) => {
         let m = t.substr(0, pos)
 
         while (m.length > 0) {
-        if (m.length % 3 == 0)
+        if (m.length % 3 === 0)
             width = 3
         else
             width = 2
@@ -140,7 +143,7 @@ export const decrypt = (c,d,n) => {
         let s = m.substr(0, width)
         // remove leading 0 if necessary so JavaScript doesn't get confused
         // when it tries to understand the number
-        while (s[0] == "0")
+        while (s[0] === "0")
             s = s.substr(1, s.length - 1)
         M+= String.fromCharCode(s)
         m = m.substring(width, m.length)

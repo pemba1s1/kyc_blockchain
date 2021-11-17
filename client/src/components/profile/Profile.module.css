@@ -50,6 +50,7 @@ html{
   border-radius: 50px;
   width: auto;
   padding: 1em 1em 0.6em 2em;
+  word-break: break-word;
 }
 
 .govt{

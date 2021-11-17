@@ -23,6 +23,7 @@ html{
   backdrop-filter: blur(5px);
   box-shadow: 15px 25px 45px rgba(0,0,0,0.7);
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .pic {

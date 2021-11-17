@@ -35,6 +35,7 @@ export default class Viewkyc extends Component{
         this.props.kyc1.removeKYC(this.state.cust_address,{from:this.props.account})
             .then(res=>{
                 console.log(res)
+                this.setState({value:false})
             }).catch(err=>{
                 console.log(err)
             })

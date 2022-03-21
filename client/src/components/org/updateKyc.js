@@ -10,7 +10,7 @@ export default function Updatekyc(props){
     },[])
     return(
         <Container>
-        <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Update new KYC </h2>
+        <h2 style={{margin:"auto",width:"80%",padding:"20px 10px 10px 10px"}}>Update KYC </h2>
             <Form onSubmit={props.updateKyc} style={{margin:"auto",width:"80%",padding:"30px 10px 10px 10px"}}>
                 <Form.Group>
                     <Form.Label>Eth Address : </Form.Label>

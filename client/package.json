@@ -5,11 +5,12 @@
   "dependencies": {
     "axios": "^0.21.4",
     "bootstrap": "^5.1.1",
-    "ethers": "^5.5.1",
+    "ethers": "^5.4.3",
     "ipfs-http-client": "^52.0.3",
     "react": "16.11.0",
     "react-bootstrap": "^1.6.3",
     "react-dom": "16.11.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3"
   },
   "scripts": {
